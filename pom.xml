@@ -29,7 +29,7 @@
 
     <groupId>io.bootique.aws</groupId>
     <artifactId>bootique-aws-parent</artifactId>
-    <version>0.26-SNAPSHOT</version>
+    <version>1.0.RC1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>bootique-aws-parent: Parent of AWS integration modules for Bootique</name>
