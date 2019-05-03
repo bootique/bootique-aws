@@ -29,7 +29,7 @@
 
     <groupId>io.bootique.aws</groupId>
     <artifactId>bootique-aws-parent</artifactId>
-    <version>1.0.RC2-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>pom</packaging>
 
     <name>bootique-aws-parent: Parent of AWS integration modules for Bootique</name>
@@ -50,7 +50,7 @@
     <scm>
         <developerConnection>scm:git:ssh://git@github.com/bootique/bootique-aws</developerConnection>
         <url>https://github.com/bootique/bootique-aws</url>
-        <tag>HEAD</tag>
+        <tag>1.0</tag>
     </scm>
 
     <distributionManagement>
