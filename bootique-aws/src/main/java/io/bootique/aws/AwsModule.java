@@ -30,7 +30,7 @@ public class AwsModule extends ConfigModule {
     @Provides
     @Singleton
     AwsConfigFactory provideConfigFactory(ConfigurationFactory configurationFactory) {
-        return configurationFactory.config(AwsConfigFactory.class, configPrefix);
+        return config(AwsConfigFactory.class, configurationFactory);
     }
 
     @Provides

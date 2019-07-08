@@ -35,6 +35,6 @@ public class AwsS3Module extends ConfigModule {
             ConfigurationFactory configurationFactory,
             AWSCredentialsProvider credentialsProvider,
             AwsConfig config) {
-        return configurationFactory.config(S3Factory.class, configPrefix).createS3(credentialsProvider, config);
+        return config(S3Factory.class, configurationFactory).createS3(credentialsProvider, config);
     }
 }
