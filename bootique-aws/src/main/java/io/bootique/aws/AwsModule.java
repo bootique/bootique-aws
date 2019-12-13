@@ -19,11 +19,12 @@
 
 package io.bootique.aws;
 
+import javax.inject.Singleton;
+
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
 import io.bootique.ConfigModule;
 import io.bootique.config.ConfigurationFactory;
+import io.bootique.di.Provides;
 
 public class AwsModule extends ConfigModule {
 
