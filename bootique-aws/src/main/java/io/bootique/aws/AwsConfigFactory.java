@@ -23,12 +23,12 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.regions.Regions;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @BQConfig
 public class AwsConfigFactory {
@@ -36,6 +36,7 @@ public class AwsConfigFactory {
     private String accessKey;
     private String secretKey;
     private String defaultRegion;
+    private String serviceEndpoint;
 
     @BQConfigProperty("Sets AWS account credentials 'accessKey'")
     public void setAccessKey(String accessKey) {
@@ -52,9 +53,23 @@ public class AwsConfigFactory {
         this.defaultRegion = defaultRegion;
     }
 
+    /**
+     * @since 2.0.B1
+     */
+    @BQConfigProperty("Optional alternative service endpoint. Useful local tests.")
+    public void setServiceEndpoint(String serviceEndpoint) {
+        this.serviceEndpoint = serviceEndpoint;
+    }
+
     public AwsConfig createConfig() {
-        Optional<Regions> region = Optional.ofNullable(defaultRegion).map(Regions::fromName);
-        return new AwsConfig(region);
+
+        // It appears AwsClientBuilder can take either a region or an endpoint configuration (or nothing at all),
+        // but not both.
+
+        AwsClientBuilder.EndpointConfiguration endpointConfig = createEndpointConfig();
+        Regions region = endpointConfig == null && defaultRegion != null ? Regions.fromName(defaultRegion) : null;
+
+        return new AwsConfig(region, endpointConfig);
     }
 
     public AWSCredentialsProvider createCredentialsProvider() {
@@ -69,4 +84,7 @@ public class AwsConfigFactory {
         return new BasicAWSCredentials(accessKey, secretKey);
     }
 
+    protected AwsClientBuilder.EndpointConfiguration createEndpointConfig() {
+        return serviceEndpoint != null ? new AwsClientBuilder.EndpointConfiguration(serviceEndpoint, defaultRegion) : null;
+    }
 }

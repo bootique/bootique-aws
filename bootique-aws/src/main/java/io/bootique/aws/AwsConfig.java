@@ -19,19 +19,26 @@
 
 package io.bootique.aws;
 
+import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.regions.Regions;
 
 import java.util.Optional;
 
 public class AwsConfig {
 
-    private Optional<Regions> defaultRegion;
+    private final Regions defaultRegion;
+    private final AwsClientBuilder.EndpointConfiguration endpointConfiguration;
 
-    public AwsConfig(Optional<Regions> defaultRegion) {
+    public AwsConfig(Regions defaultRegion, AwsClientBuilder.EndpointConfiguration endpointConfiguration) {
         this.defaultRegion = defaultRegion;
+        this.endpointConfiguration = endpointConfiguration;
     }
 
     public Optional<Regions> getDefaultRegion() {
-        return defaultRegion;
+        return Optional.ofNullable(defaultRegion);
+    }
+
+    public Optional<AwsClientBuilder.EndpointConfiguration> getEndpointConfiguration() {
+        return Optional.ofNullable(endpointConfiguration);
     }
 }

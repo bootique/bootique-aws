@@ -28,11 +28,13 @@ import io.bootique.aws.AwsConfig;
 public class S3Factory {
 
     public AmazonS3 createS3(AWSCredentialsProvider credentialsProvider, AwsConfig config) {
+
         AmazonS3ClientBuilder builder = AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(credentialsProvider);
 
         config.getDefaultRegion().ifPresent(builder::withRegion);
+        config.getEndpointConfiguration().ifPresent(builder::withEndpointConfiguration);
 
         return builder.build();
     }
