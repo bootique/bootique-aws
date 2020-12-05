@@ -39,7 +39,7 @@
 
     <properties>
         <bootique.version>${project.version}</bootique.version>
-        <aws.sdk.version>1.11.337</aws.sdk.version>
+        <aws.sdk.version>1.11.913</aws.sdk.version>
     </properties>
 
 	<modules>
