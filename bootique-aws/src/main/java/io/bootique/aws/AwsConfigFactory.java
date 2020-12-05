@@ -76,10 +76,10 @@ public class AwsConfigFactory {
     }
 
     public AwsConfig createConfig() {
-        return new AwsConfig(createDefaultRegion(), createEndpointConfig());
+        return new AwsConfig(createDefaultRegion(), createEndpointConfig(), createCredentialsProvider());
     }
 
-    public AWSCredentialsProvider createCredentialsProvider() {
+    protected AWSCredentialsProvider createCredentialsProvider() {
         AWSCredentials credentials = createCredentials();
         return new AWSStaticCredentialsProvider(credentials);
     }

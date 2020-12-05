@@ -19,23 +19,19 @@
 
 package io.bootique.aws.s3;
 
-import javax.inject.Singleton;
-
-import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import io.bootique.ConfigModule;
 import io.bootique.aws.AwsConfig;
 import io.bootique.config.ConfigurationFactory;
 import io.bootique.di.Provides;
 
+import javax.inject.Singleton;
+
 public class AwsS3Module extends ConfigModule {
 
     @Provides
     @Singleton
-    AmazonS3 provideS3Client(
-            ConfigurationFactory configurationFactory,
-            AWSCredentialsProvider credentialsProvider,
-            AwsConfig config) {
-        return config(S3Factory.class, configurationFactory).createS3(credentialsProvider, config);
+    AmazonS3 provideS3Client(ConfigurationFactory configFactory, AwsConfig config) {
+        return config(S3Factory.class, configFactory).createS3(config);
     }
 }

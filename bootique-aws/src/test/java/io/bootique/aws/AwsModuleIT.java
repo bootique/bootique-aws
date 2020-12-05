@@ -20,7 +20,6 @@
 package io.bootique.aws;
 
 import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSCredentialsProvider;
 import io.bootique.junit5.BQTest;
 import io.bootique.junit5.BQTestFactory;
 import io.bootique.junit5.BQTestTool;
@@ -36,16 +35,16 @@ public class AwsModuleIT {
     final BQTestFactory testFactory = new BQTestFactory();
 
     @Test
-    public void testInjectableAWSCredentialsProvider() {
-        AWSCredentialsProvider provider = testFactory
+    public void testAwsConfig_AWSCredentialsProvider() {
+        AwsConfig config = testFactory
                 .app()
                 .autoLoadModules()
                 .property("bq.aws.accessKey", "xyz")
                 .property("bq.aws.secretKey", "abc")
                 .createRuntime()
-                .getInstance(AWSCredentialsProvider.class);
+                .getInstance(AwsConfig.class);
 
-        AWSCredentials credentials = provider.getCredentials();
+        AWSCredentials credentials = config.getCredentialsProvider().getCredentials();
 
         assertNotNull(credentials);
         assertEquals("xyz", credentials.getAWSAccessKeyId());

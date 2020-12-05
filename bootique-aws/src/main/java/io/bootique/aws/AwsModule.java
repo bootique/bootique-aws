@@ -19,7 +19,6 @@
 
 package io.bootique.aws;
 
-import com.amazonaws.auth.AWSCredentialsProvider;
 import io.bootique.ConfigModule;
 import io.bootique.config.ConfigurationFactory;
 import io.bootique.di.Provides;
@@ -27,12 +26,6 @@ import io.bootique.di.Provides;
 import javax.inject.Singleton;
 
 public class AwsModule extends ConfigModule {
-
-    @Provides
-    @Singleton
-    AWSCredentialsProvider provideCredentialsProvider(ConfigurationFactory configFactory) {
-        return config(AwsConfigFactory.class, configFactory).createCredentialsProvider();
-    }
 
     @Provides
     @Singleton
