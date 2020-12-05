@@ -19,18 +19,13 @@
 
 package io.bootique.aws;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.*;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.regions.Regions;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Objects;
 
 @BQConfig
 public class AwsConfigFactory {
@@ -85,10 +80,21 @@ public class AwsConfigFactory {
     }
 
     protected AWSCredentials createCredentials() {
-        Objects.requireNonNull(accessKey, "'accessKey' is null");
-        Objects.requireNonNull(secretKey, "'secretKey' is null");
 
-        return new BasicAWSCredentials(accessKey, secretKey);
+        if (accessKey == null && secretKey == null) {
+            return new AnonymousAWSCredentials();
+        }
+
+        if (accessKey != null && secretKey != null) {
+            return new BasicAWSCredentials(accessKey, secretKey);
+        }
+
+        // partial configuration...
+        if (accessKey == null) {
+            throw new IllegalStateException("'secretKey' is set, but 'accessKey' is not");
+        } else {
+            throw new IllegalStateException("'accessKey' is set, but 'secretKey' is not");
+        }
     }
 
     protected AwsClientBuilder.EndpointConfiguration createEndpointConfig() {

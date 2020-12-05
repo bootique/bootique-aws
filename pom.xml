@@ -46,6 +46,7 @@
 	<modules>
 		<module>bootique-aws</module>
 		<module>bootique-aws-s3</module>
+        <module>bootique-aws-secrets</module>
     </modules>
 
     <scm>
@@ -72,6 +73,11 @@
             <dependency>
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk-s3</artifactId>
+                <version>${aws.sdk.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-secretsmanager</artifactId>
                 <version>${aws.sdk.version}</version>
             </dependency>
             <dependency>

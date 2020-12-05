@@ -36,7 +36,7 @@ public class AwsConfig {
             Regions defaultRegion,
             AwsClientBuilder.EndpointConfiguration endpointConfiguration,
             AWSCredentialsProvider credentialsProvider) {
-        
+
         this.defaultRegion = defaultRegion;
         this.endpointConfiguration = endpointConfiguration;
         this.credentialsProvider = Objects.requireNonNull(credentialsProvider);
