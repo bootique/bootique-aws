@@ -40,6 +40,7 @@
     <properties>
         <bootique.version>${project.version}</bootique.version>
         <aws.sdk.version>1.11.913</aws.sdk.version>
+        <testcontainers.version>1.15.0-rc2</testcontainers.version>
     </properties>
 
 	<modules>
@@ -82,6 +83,13 @@
                 <groupId>io.bootique</groupId>
                 <artifactId>bootique-junit5</artifactId>
                 <version>${bootique.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${testcontainers.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
