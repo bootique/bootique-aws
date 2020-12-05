@@ -27,16 +27,21 @@ import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.regions.Regions;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
 @BQConfig
 public class AwsConfigFactory {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AwsConfigFactory.class);
+
     private String accessKey;
     private String secretKey;
     private String defaultRegion;
     private String serviceEndpoint;
+    private String signingRegion;
 
     @BQConfigProperty("Sets AWS account credentials 'accessKey'")
     public void setAccessKey(String accessKey) {
@@ -48,7 +53,8 @@ public class AwsConfigFactory {
         this.secretKey = secretKey;
     }
 
-    @BQConfigProperty("Optional default region to use for AWS calls.")
+    @BQConfigProperty("Optional default region to use for AWS calls. Ignored if 'serviceEndpoint' " +
+            "is set (in which case 'signingRegion' property is used to mirror AWS conventions")
     public void setDefaultRegion(String defaultRegion) {
         this.defaultRegion = defaultRegion;
     }
@@ -61,15 +67,16 @@ public class AwsConfigFactory {
         this.serviceEndpoint = serviceEndpoint;
     }
 
+    /**
+     * @since 2.0.B1
+     */
+    @BQConfigProperty("Optional signing region to use with alternative service endpoint. Ignored if 'serviceEndpoint' is not set")
+    public void setSigningRegion(String signingRegion) {
+        this.signingRegion = signingRegion;
+    }
+
     public AwsConfig createConfig() {
-
-        // It appears AwsClientBuilder can take either a region or an endpoint configuration (or nothing at all),
-        // but not both.
-
-        AwsClientBuilder.EndpointConfiguration endpointConfig = createEndpointConfig();
-        Regions region = endpointConfig == null && defaultRegion != null ? Regions.fromName(defaultRegion) : null;
-
-        return new AwsConfig(region, endpointConfig);
+        return new AwsConfig(createDefaultRegion(), createEndpointConfig());
     }
 
     public AWSCredentialsProvider createCredentialsProvider() {
@@ -85,6 +92,23 @@ public class AwsConfigFactory {
     }
 
     protected AwsClientBuilder.EndpointConfiguration createEndpointConfig() {
-        return serviceEndpoint != null ? new AwsClientBuilder.EndpointConfiguration(serviceEndpoint, defaultRegion) : null;
+        return serviceEndpoint != null ? new AwsClientBuilder.EndpointConfiguration(serviceEndpoint, signingRegion) : null;
+    }
+
+    protected Regions createDefaultRegion() {
+
+        // It appears AwsClientBuilder can take either a region or an endpoint configuration (or nothing at all),
+        // but not both.
+
+        if (serviceEndpoint != null) {
+
+            if (defaultRegion != null) {
+                LOGGER.warn("Ignoring 'aws.defaultRegion' property, as 'aws.serviceEndpoint' is set");
+            }
+
+            return null;
+        }
+
+        return defaultRegion != null ? Regions.fromName(defaultRegion) : null;
     }
 }
