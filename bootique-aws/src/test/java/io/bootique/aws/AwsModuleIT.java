@@ -21,17 +21,19 @@ package io.bootique.aws;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
-import io.bootique.test.junit.BQTestFactory;
-import org.junit.Rule;
-import org.junit.Test;
+import io.bootique.junit5.BQTest;
+import io.bootique.junit5.BQTestFactory;
+import io.bootique.junit5.BQTestTool;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@BQTest
 public class AwsModuleIT {
 
-    @Rule
-    public BQTestFactory testFactory = new BQTestFactory();
+    @BQTestTool
+    final BQTestFactory testFactory = new BQTestFactory();
 
     @Test
     public void testInjectableAWSCredentialsProvider() {

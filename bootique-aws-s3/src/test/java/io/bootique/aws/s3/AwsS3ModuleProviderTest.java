@@ -19,8 +19,9 @@
 
 package io.bootique.aws.s3;
 
-import io.bootique.test.junit.BQModuleProviderChecker;
-import org.junit.Test;
+
+import io.bootique.junit5.BQModuleProviderChecker;
+import org.junit.jupiter.api.Test;
 
 public class AwsS3ModuleProviderTest {
 
