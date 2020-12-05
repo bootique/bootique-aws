@@ -18,26 +18,24 @@
  */
 package io.bootique.aws.secrets;
 
-import com.amazonaws.services.secretsmanager.AWSSecretsManager;
-import io.bootique.ConfigModule;
-import io.bootique.aws.AwsConfig;
+import io.bootique.BQCoreModule;
 import io.bootique.di.Binder;
-import io.bootique.di.Provides;
 
-import javax.inject.Singleton;
+import java.util.Objects;
 
 /**
  * @since 2.0.B1
  */
-public class AwsSecretsModule extends ConfigModule {
+public class AwsSecretsModuleExtender {
 
-    public static AwsSecretsModuleExtender extend(Binder binder) {
-        return new AwsSecretsModuleExtender(binder);
+    private final Binder binder;
+
+    public AwsSecretsModuleExtender(Binder binder) {
+        this.binder = Objects.requireNonNull(binder);
     }
 
-    @Singleton
-    @Provides
-    AWSSecretsManager provideSecretsManager(AwsConfig config) {
-        return new AwsSecretsManagerFactory().create(config);
+    public AwsSecretsModuleExtender loadConfigurationFromSecrets() {
+        BQCoreModule.extend(binder).addConfigLoader(AwsSecretsConfigurationLoader.class);
+        return this;
     }
 }

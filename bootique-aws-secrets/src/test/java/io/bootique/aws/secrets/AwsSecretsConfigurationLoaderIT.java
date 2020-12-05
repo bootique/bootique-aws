@@ -18,26 +18,21 @@
  */
 package io.bootique.aws.secrets;
 
-import com.amazonaws.services.secretsmanager.AWSSecretsManager;
-import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
-import com.amazonaws.services.secretsmanager.model.PutSecretValueRequest;
 import io.bootique.BQCoreModule;
 import io.bootique.BQRuntime;
 import io.bootique.Bootique;
 import io.bootique.junit5.BQApp;
 import io.bootique.junit5.BQTest;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 @Testcontainers
 @BQTest
-public class AwsSecretsManagerIT {
+public class AwsSecretsConfigurationLoaderIT {
 
     // TODO: unfortunately can't reuse Localstack between the tests, as Testcontainers doesn't provide a GLOBAL scope
 
@@ -47,7 +42,11 @@ public class AwsSecretsManagerIT {
     static final LocalStackContainer localstack = new LocalStackContainer(localstackImage)
             .withServices(LocalStackContainer.Service.SECRETSMANAGER);
 
-    // app can't be static, as it won't be able to access values from localstack
+    @BeforeAll
+    static void loadSecrets() {
+        // TODO: create secrets before running the app...
+    }
+
     @BQApp(skipRun = true)
     final BQRuntime app = Bootique.app()
             .autoLoadModules()
@@ -55,22 +54,19 @@ public class AwsSecretsManagerIT {
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.secretKey", localstack.getSecretKey()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.signingRegion", localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER).getSigningRegion()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.serviceEndpoint", localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER).getServiceEndpoint()))
+
+            // load some base config.. Secrets will be merged on top of it
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.x.user", "prop_x_user"))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.y.user", "prop_y_user"))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.y.password", "prop_y_password"))
+
+            // this enables AwsSecretsConfigurationLoader that we are testing
+            .module(b -> AwsSecretsModule.extend(b).loadConfigurationFromSecrets())
+
             .createRuntime();
 
     @Test
-    public void testSecrets() {
-
-        String secret = "{\"a\":\"top secret\"}";
-
-        AWSSecretsManager secretsManager = app.getInstance(AWSSecretsManager.class);
-
-        PutSecretValueRequest putSecret = new PutSecretValueRequest().withSecretString(secret);
-        String arn = secretsManager.putSecretValue(putSecret).getARN();
-        assertNotNull(arn);
-
-        GetSecretValueRequest getSecret = new GetSecretValueRequest().withSecretId(arn);
-        String secretRead = secretsManager.getSecretValue(getSecret).getSecretString();
-        assertEquals(secret, secretRead);
+    public void testConfigMerged() {
+        // TODO: test loaded config
     }
-
 }

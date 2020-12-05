@@ -37,6 +37,8 @@ public class AwsSecretsModuleProvider implements BQModuleProvider {
 
     @Override
     public Map<String, Type> configs() {
-        return Collections.singletonMap("awssecrets", SecretsManagerFactory.class);
+        // while AwsSecretConfigsFactory is not used in a traditional way via ConfigurationLoader,
+        // it is still the factory exposed by this module.
+        return Collections.singletonMap("awssecrets", AwsSecretConfigsFactory.class);
     }
 }

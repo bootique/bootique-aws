@@ -18,26 +18,40 @@
  */
 package io.bootique.aws.secrets;
 
-import com.amazonaws.services.secretsmanager.AWSSecretsManager;
-import io.bootique.ConfigModule;
-import io.bootique.aws.AwsConfig;
-import io.bootique.di.Binder;
-import io.bootique.di.Provides;
-
-import javax.inject.Singleton;
+import java.util.Objects;
 
 /**
+ * AWS SecretsManager secret ARN or name.
+ *
  * @since 2.0.B1
  */
-public class AwsSecretsModule extends ConfigModule {
+public class SecretId {
 
-    public static AwsSecretsModuleExtender extend(Binder binder) {
-        return new AwsSecretsModuleExtender(binder);
+    private final String id;
+
+    public SecretId(String id) {
+        this.id = Objects.requireNonNull(id);
     }
 
-    @Singleton
-    @Provides
-    AWSSecretsManager provideSecretsManager(AwsConfig config) {
-        return new AwsSecretsManagerFactory().create(config);
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SecretId secretId = (SecretId) o;
+        return id.equals(secretId.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
