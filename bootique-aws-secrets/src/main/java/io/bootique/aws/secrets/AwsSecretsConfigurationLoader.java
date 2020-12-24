@@ -20,6 +20,7 @@ package io.bootique.aws.secrets;
 
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.bootique.aws.AwsConfig;
 import io.bootique.aws.AwsConfigFactory;
 import io.bootique.config.ConfigurationFactory;
@@ -27,11 +28,11 @@ import io.bootique.config.jackson.JsonConfigurationFactory;
 import io.bootique.config.jackson.JsonConfigurationLoader;
 import io.bootique.config.jackson.PropertiesConfigurationLoader;
 import io.bootique.jackson.JacksonService;
+import io.bootique.log.BootLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.Map;
 
 /**
  * @since 2.0.B1
@@ -44,10 +45,12 @@ public class AwsSecretsConfigurationLoader implements JsonConfigurationLoader {
     public static int ORDER = PropertiesConfigurationLoader.ORDER + 100;
 
     private final JacksonService jackson;
+    private final BootLogger bootLogger;
 
     @Inject
-    public AwsSecretsConfigurationLoader(JacksonService jackson) {
+    public AwsSecretsConfigurationLoader(JacksonService jackson, BootLogger bootLogger) {
         this.jackson = jackson;
+        this.bootLogger = bootLogger;
     }
 
     @Override
@@ -62,35 +65,17 @@ public class AwsSecretsConfigurationLoader implements JsonConfigurationLoader {
         // ConfigurationFactory bootstrap. So instead we'll do our own assembly using the same factories that produce
         // injectable singletons.
 
-        ConfigurationFactory configFactory = new JsonConfigurationFactory(mutableInput, jackson.newObjectMapper());
-        Map<String, SecretId> secretIds = configFactory.config(AwsSecretConfigsFactory.class, "awssecrets").create();
+        ObjectMapper jsonMapper = jackson.newObjectMapper();
 
-        if (secretIds.isEmpty()) {
+        ConfigurationFactory configFactory = new JsonConfigurationFactory(mutableInput, jsonMapper);
+        AwsSecretConfigsFactory secretsConfigFactory = configFactory.config(AwsSecretConfigsFactory.class, "awssecrets");
+
+        if (secretsConfigFactory.isEmpty()) {
             return mutableInput;
         }
 
         AwsConfig config = configFactory.config(AwsConfigFactory.class, "aws").createConfig();
         AWSSecretsManager secretsManager = new AwsSecretsManagerFactory().create(config);
-
-        SecretConfigLoader loader = new SecretConfigLoader(secretsManager, mutableInput);
-        secretIds.forEach(loader::load);
-
-        return loader.mutableInput;
+        return secretsConfigFactory.updateConfiguration(bootLogger, secretsManager, jsonMapper, mutableInput);
     }
-
-    static class SecretConfigLoader {
-
-        private final AWSSecretsManager secretsManager;
-        private JsonNode mutableInput;
-
-        SecretConfigLoader(AWSSecretsManager secretsManager, JsonNode mutableInput) {
-            this.secretsManager = secretsManager;
-            this.mutableInput = mutableInput;
-        }
-
-        void load(String prefix, SecretId secretId) {
-
-        }
-    }
-
 }

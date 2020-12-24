@@ -18,11 +18,14 @@
  */
 package io.bootique.aws.secrets;
 
+import com.amazonaws.services.secretsmanager.AWSSecretsManager;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
+import io.bootique.log.BootLogger;
 
-import java.util.Collections;
-import java.util.Map;
+import java.util.List;
 
 /**
  * @since 2.0.B1
@@ -30,14 +33,29 @@ import java.util.Map;
 @BQConfig
 public class AwsSecretConfigsFactory {
 
-    private Map<String, SecretId> secretConfigs;
+    private List<AwsSecretConfigFactory> secrets;
 
-    @BQConfigProperty
-    public void setSecretConfigs(Map<String, SecretId> secretConfigs) {
-        this.secretConfigs = secretConfigs;
+    @BQConfigProperty("A list of AWS secrets that must be loaded and merged into the app configuration")
+    public void setSecrets(List<AwsSecretConfigFactory> secrets) {
+        this.secrets = secrets;
     }
 
-    public Map<String, SecretId> create() {
-        return secretConfigs != null ? secretConfigs : Collections.emptyMap();
+    public boolean isEmpty() {
+        return secrets == null || secrets.isEmpty();
+    }
+
+    public JsonNode updateConfiguration(
+            BootLogger bootLogger,
+            AWSSecretsManager secretsManager,
+            ObjectMapper jsonMapper,
+            JsonNode mutableInput) {
+
+        if (!isEmpty()) {
+            for (AwsSecretConfigFactory configFactory : secrets) {
+                mutableInput = configFactory.updateConfiguration(bootLogger, secretsManager, jsonMapper, mutableInput);
+            }
+        }
+
+        return mutableInput;
     }
 }

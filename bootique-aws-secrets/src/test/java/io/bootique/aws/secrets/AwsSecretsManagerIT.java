@@ -72,5 +72,4 @@ public class AwsSecretsManagerIT {
         String secretRead = secretsManager.getSecretValue(getSecret).getSecretString();
         assertEquals(secret, secretRead);
     }
-
 }

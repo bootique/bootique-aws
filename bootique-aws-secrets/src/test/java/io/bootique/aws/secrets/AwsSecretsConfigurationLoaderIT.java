@@ -18,9 +18,16 @@
  */
 package io.bootique.aws.secrets;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.secretsmanager.AWSSecretsManager;
+import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
+import com.amazonaws.services.secretsmanager.model.PutSecretValueRequest;
+import com.amazonaws.services.secretsmanager.model.PutSecretValueResult;
 import io.bootique.BQCoreModule;
 import io.bootique.BQRuntime;
 import io.bootique.Bootique;
+import io.bootique.config.ConfigurationFactory;
 import io.bootique.junit5.BQApp;
 import io.bootique.junit5.BQTest;
 import org.junit.jupiter.api.BeforeAll;
@@ -30,13 +37,17 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @Testcontainers
 @BQTest
 public class AwsSecretsConfigurationLoaderIT {
 
-    // TODO: unfortunately can't reuse Localstack between the tests, as Testcontainers doesn't provide a GLOBAL scope
+    private static PutSecretValueResult SECRET1;
+    private static PutSecretValueResult SECRET2;
 
-    static DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:0.11.3");
+    // TODO: unfortunately can't reuse Localstack between the tests, as Testcontainers doesn't provide a GLOBAL scope
+    private static final DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:0.11.3");
 
     @Container
     static final LocalStackContainer localstack = new LocalStackContainer(localstackImage)
@@ -44,7 +55,22 @@ public class AwsSecretsConfigurationLoaderIT {
 
     @BeforeAll
     static void loadSecrets() {
-        // TODO: create secrets before running the app...
+
+        String secret1 = "{\"password\":\"y_secret\"}";
+        String secret2 = "{\"password\":\"z_secret\", \"user\":\"z_uname\"}";
+
+        AWSSecretsManager sm = AWSSecretsManagerClientBuilder.standard()
+                // while SecretsManager generally does not require credentials, with access granted based on the
+                // caller location, tests with Localstack fail without credentials. So have to set them here...
+                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(localstack.getAccessKey(), localstack.getSecretKey())))
+                .withEndpointConfiguration(localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER))
+                .build();
+
+        SECRET1 = sm.putSecretValue(new PutSecretValueRequest().withSecretString(secret1).withSecretId("secret1"));
+        assertNotNull(SECRET1);
+
+        SECRET2 = sm.putSecretValue(new PutSecretValueRequest().withSecretString(secret2).withSecretId("secret2"));
+        assertNotNull(SECRET2);
     }
 
     @BQApp(skipRun = true)
@@ -56,17 +82,42 @@ public class AwsSecretsConfigurationLoaderIT {
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.serviceEndpoint", localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER).getServiceEndpoint()))
 
             // load some base config.. Secrets will be merged on top of it
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.x.user", "prop_x_user"))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.y.user", "prop_y_user"))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.y.password", "prop_y_password"))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.a.user", "a_uname"))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.a.password", "a_secret"))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.b.c.user", "bc_uname"))
 
-            // this enables AwsSecretsConfigurationLoader that we are testing
+            // configure and enable AwsSecretsConfigurationLoader that we are testing
+            // test lookup by both name and ARN
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[0].awsName", SECRET1.getName()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[0].mergePath", "a"))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[1].awsName", SECRET2.getARN()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[1].mergePath", "b.c"))
             .module(b -> AwsSecretsModule.extend(b).loadConfigurationFromSecrets())
 
             .createRuntime();
 
     @Test
     public void testConfigMerged() {
-        // TODO: test loaded config
+
+        UserProfile a = app.getInstance(ConfigurationFactory.class).config(UserProfile.class, "a");
+        assertEquals("a_uname", a.user);
+        assertEquals("y_secret", a.password);
+
+        UserProfile bc = app.getInstance(ConfigurationFactory.class).config(UserProfile.class, "b.c");
+        assertEquals("z_uname", bc.user);
+        assertEquals("z_secret", bc.password);
+    }
+
+    public static final class UserProfile {
+        private String user;
+        private String password;
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public void setUser(String user) {
+            this.user = user;
+        }
     }
 }
