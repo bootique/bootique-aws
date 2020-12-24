@@ -1,5 +1,6 @@
 ## 2.0.B1
 
+* #5 Integrate support for AWS Secrets Manager
 * #6 Upgrade AWS libs to 1.11.913
 * #7 Integrate AWS EndpointConfiguration in the AWS config
 
