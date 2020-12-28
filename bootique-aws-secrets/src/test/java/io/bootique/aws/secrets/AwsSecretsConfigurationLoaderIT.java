@@ -92,7 +92,6 @@ public class AwsSecretsConfigurationLoaderIT {
             .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[0].mergePath", "a"))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[1].awsName", SECRET2.getARN()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[1].mergePath", "b.c"))
-            .module(b -> AwsSecretsModule.extend(b).loadConfigurationFromSecrets())
 
             .createRuntime();
 

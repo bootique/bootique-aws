@@ -19,6 +19,7 @@
 package io.bootique.aws.secrets;
 
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
+import io.bootique.BQCoreModule;
 import io.bootique.ConfigModule;
 import io.bootique.aws.AwsConfig;
 import io.bootique.di.Binder;
@@ -31,8 +32,10 @@ import javax.inject.Singleton;
  */
 public class AwsSecretsModule extends ConfigModule {
 
-    public static AwsSecretsModuleExtender extend(Binder binder) {
-        return new AwsSecretsModuleExtender(binder);
+
+    @Override
+    public void configure(Binder binder) {
+        BQCoreModule.extend(binder).addConfigLoader(AwsSecretsConfigurationLoader.class);
     }
 
     @Singleton
