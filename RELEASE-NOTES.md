@@ -3,6 +3,7 @@
 * #5 Integrate support for AWS Secrets Manager
 * #6 Upgrade AWS libs to 1.11.913
 * #7 Integrate AWS EndpointConfiguration in the AWS config
+* #8 bootique-aws-secrets: support for secret JSON transformers
 
 ## 1.0.RC1
 
