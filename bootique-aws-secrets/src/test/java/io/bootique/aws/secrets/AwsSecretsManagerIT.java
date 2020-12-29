@@ -26,6 +26,7 @@ import io.bootique.BQRuntime;
 import io.bootique.Bootique;
 import io.bootique.junit5.BQApp;
 import io.bootique.junit5.BQTest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -35,6 +36,7 @@ import org.testcontainers.utility.DockerImageName;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@Disabled("Debugging SecretsManager access settings")
 @Testcontainers
 @BQTest
 public class AwsSecretsManagerIT {

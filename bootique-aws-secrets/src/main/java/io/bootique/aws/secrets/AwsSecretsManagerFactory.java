@@ -28,10 +28,10 @@ import io.bootique.aws.AwsConfig;
 public class AwsSecretsManagerFactory {
 
     public AWSSecretsManager create(AwsConfig config) {
-        AWSSecretsManagerClientBuilder builder = AWSSecretsManagerClientBuilder.standard()
+        AWSSecretsManagerClientBuilder builder = AWSSecretsManagerClientBuilder.standard();
                 // while SecretsManager generally does not require credentials, with access granted based on the
                 // caller location, tests with Localstack fail without credentials. So have to set them here...
-                .withCredentials(config.getCredentialsProvider());
+//                .withCredentials(config.getCredentialsProvider());
 
         config.getDefaultRegion().ifPresent(builder::withRegion);
         config.getEndpointConfiguration().ifPresent(builder::withEndpointConfiguration);
