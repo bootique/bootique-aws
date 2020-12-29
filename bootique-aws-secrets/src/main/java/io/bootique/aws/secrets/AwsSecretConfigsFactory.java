@@ -26,6 +26,7 @@ import io.bootique.annotation.BQConfigProperty;
 import io.bootique.log.BootLogger;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @since 2.0.B1
@@ -48,11 +49,12 @@ public class AwsSecretConfigsFactory {
             BootLogger bootLogger,
             AWSSecretsManager secretsManager,
             ObjectMapper jsonMapper,
+            Map<String, AwsJsonTransformer> transformers,
             JsonNode mutableInput) {
 
         if (!isEmpty()) {
             for (AwsSecretConfigFactory configFactory : secrets) {
-                mutableInput = configFactory.updateConfiguration(bootLogger, secretsManager, jsonMapper, mutableInput);
+                mutableInput = configFactory.updateConfiguration(bootLogger, secretsManager, jsonMapper, transformers, mutableInput);
             }
         }
 

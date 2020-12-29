@@ -45,6 +45,7 @@ public class AwsSecretConfigFactory {
 
     private String awsName;
     private String mergePath;
+    private String jsonTransformer;
 
     @BQConfigProperty("Secret ARN or name within AWS SecretsManager")
     public AwsSecretConfigFactory setAwsName(String awsName) {
@@ -58,17 +59,26 @@ public class AwsSecretConfigFactory {
         return this;
     }
 
+    @BQConfigProperty("A optional name of a registered transformer to process JSON coming from AWS Secrets " +
+            "Manager to a format appropriate for the target Bootique config")
+    public AwsSecretConfigFactory setJsonTransformer(String jsonTransformer) {
+        this.jsonTransformer = jsonTransformer;
+        return this;
+    }
+
     public JsonNode updateConfiguration(
             BootLogger bootLogger,
             AWSSecretsManager secretsManager,
             ObjectMapper jsonMapper,
+            Map<String, AwsJsonTransformer> transformers,
             JsonNode mutableInput) {
 
         bootLogger.trace(() -> "Loading config for path '" + mergePath + "' and AWS secret '" + awsName + "'");
 
         String secret = readSecret(secretsManager);
         JsonNode parsed = parseSecret(jsonMapper, secret);
-        return mergeSecret(mutableInput, parsed);
+        JsonNode normalized = normalizeSecret(transformers, parsed);
+        return mergeSecret(mutableInput, normalized);
     }
 
     protected String readSecret(AWSSecretsManager secretsManager) {
@@ -93,6 +103,22 @@ public class AwsSecretConfigFactory {
         }
 
         return parsed;
+    }
+
+    protected JsonNode normalizeSecret(Map<String, AwsJsonTransformer> transformers, JsonNode secret) {
+        if (jsonTransformer == null) {
+            return secret;
+        }
+
+        AwsJsonTransformer transformer = transformers.get(jsonTransformer);
+        if (transformer == null) {
+            throw new RuntimeException("Unknown or invalid 'jsonTransformer': "
+                    + jsonTransformer
+                    + ". Known transformers: "
+                    + transformers.keySet());
+        }
+
+        return transformer.fromSecret(secret);
     }
 
     protected JsonNode mergeSecret(JsonNode mutableInput, JsonNode secret) {

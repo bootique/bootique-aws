@@ -18,23 +18,15 @@
  */
 package io.bootique.aws.secrets;
 
-import com.amazonaws.services.secretsmanager.AWSSecretsManager;
-import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
-import io.bootique.aws.AwsConfig;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
+ * An extension of {@link AwsSecretsConfigurationLoader} to transform AWS secret JSON to a format expected by a given
+ * Bootique config.
+ *
  * @since 2.0.B1
  */
-public class AwsSecretsManagerFactory {
+public interface AwsJsonTransformer {
 
-    public AWSSecretsManager create(AwsConfig config) {
-        AWSSecretsManagerClientBuilder builder = AWSSecretsManagerClientBuilder.standard();
-        // TODO: reenable credentials once no-config credentials will start to take into account lambda env vars
-//                .withCredentials(config.getCredentialsProvider());
-
-        config.getDefaultRegion().ifPresent(builder::withRegion);
-        config.getEndpointConfiguration().ifPresent(builder::withEndpointConfiguration);
-
-        return builder.build();
-    }
+    JsonNode fromSecret(JsonNode awsSecret);
 }

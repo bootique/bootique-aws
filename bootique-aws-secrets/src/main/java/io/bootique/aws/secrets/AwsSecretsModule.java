@@ -22,6 +22,7 @@ import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import io.bootique.BQCoreModule;
 import io.bootique.ConfigModule;
 import io.bootique.aws.AwsConfig;
+import io.bootique.aws.secrets.transformer.RDSToHikariDataSourceTransformer;
 import io.bootique.di.Binder;
 import io.bootique.di.Provides;
 
@@ -32,9 +33,17 @@ import javax.inject.Singleton;
  */
 public class AwsSecretsModule extends ConfigModule {
 
+    public static AwsSecretsManagerExtender extend(Binder binder) {
+        return new AwsSecretsManagerExtender(binder);
+    }
 
     @Override
     public void configure(Binder binder) {
+
+        AwsSecretsModule.extend(binder)
+                .initAllExtensions()
+                .addTransformer("rds-to-hikari-datasource", RDSToHikariDataSourceTransformer.class);
+
         BQCoreModule.extend(binder).addConfigLoader(AwsSecretsConfigurationLoader.class);
     }
 

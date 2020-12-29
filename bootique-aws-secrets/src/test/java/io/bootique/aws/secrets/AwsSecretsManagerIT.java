@@ -36,7 +36,7 @@ import org.testcontainers.utility.DockerImageName;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Disabled("Debugging SecretsManager access settings")
+@Disabled("Until no-config Secrets Manager starts to work")
 @Testcontainers
 @BQTest
 public class AwsSecretsManagerIT {

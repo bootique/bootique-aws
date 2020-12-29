@@ -29,28 +29,27 @@ import io.bootique.config.jackson.JsonConfigurationLoader;
 import io.bootique.config.jackson.PropertiesConfigurationLoader;
 import io.bootique.jackson.JacksonService;
 import io.bootique.log.BootLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 /**
  * @since 2.0.B1
  */
 public class AwsSecretsConfigurationLoader implements JsonConfigurationLoader {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AwsSecretsConfigurationLoader.class);
-
     // this ordering places us at the end of the standard loader chain
     public static int ORDER = PropertiesConfigurationLoader.ORDER + 100;
 
     private final JacksonService jackson;
     private final BootLogger bootLogger;
+    private final Map<String, AwsJsonTransformer> transformers;
 
     @Inject
-    public AwsSecretsConfigurationLoader(JacksonService jackson, BootLogger bootLogger) {
+    public AwsSecretsConfigurationLoader(JacksonService jackson, BootLogger bootLogger, Map<String, AwsJsonTransformer> transformers) {
         this.jackson = jackson;
         this.bootLogger = bootLogger;
+        this.transformers = transformers;
     }
 
     @Override
@@ -76,6 +75,6 @@ public class AwsSecretsConfigurationLoader implements JsonConfigurationLoader {
 
         AwsConfig config = configFactory.config(AwsConfigFactory.class, "aws").createConfig();
         AWSSecretsManager secretsManager = new AwsSecretsManagerFactory().create(config);
-        return secretsConfigFactory.updateConfiguration(bootLogger, secretsManager, jsonMapper, mutableInput);
+        return secretsConfigFactory.updateConfiguration(bootLogger, secretsManager, jsonMapper, transformers, mutableInput);
     }
 }

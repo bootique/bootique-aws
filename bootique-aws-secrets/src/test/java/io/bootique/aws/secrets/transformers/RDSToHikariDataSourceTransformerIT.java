@@ -16,18 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package io.bootique.aws.secrets;
+package io.bootique.aws.secrets.transformers;
 
+import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
 import com.amazonaws.services.secretsmanager.model.PutSecretValueRequest;
-import com.amazonaws.services.secretsmanager.model.PutSecretValueResult;
+import com.zaxxer.hikari.HikariConfig;
 import io.bootique.BQCoreModule;
 import io.bootique.BQRuntime;
 import io.bootique.Bootique;
 import io.bootique.config.ConfigurationFactory;
+import io.bootique.jdbc.hikaricp.HikariCPManagedDataSourceFactory;
 import io.bootique.junit5.BQApp;
 import io.bootique.junit5.BQTest;
 import org.junit.jupiter.api.BeforeAll;
@@ -39,15 +40,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Disabled("Until no-config Secrets Manager starts to work")
 @Testcontainers
 @BQTest
-public class AwsSecretsConfigurationLoaderIT {
-
-    private static PutSecretValueResult SECRET1;
-    private static PutSecretValueResult SECRET2;
+public class RDSToHikariDataSourceTransformerIT {
 
     // TODO: unfortunately can't reuse Localstack between the tests, as Testcontainers doesn't provide a GLOBAL scope
     private static final DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:0.11.3");
@@ -59,19 +56,21 @@ public class AwsSecretsConfigurationLoaderIT {
     @BeforeAll
     static void loadSecrets() {
 
-        String secret1 = "{\"password\":\"y_secret\"}";
-        String secret2 = "{\"password\":\"z_secret\", \"user\":\"z_uname\"}";
+        String rdsSecret = "{\"password\":\"rds_password\", " +
+                "\"username\":\"rds_user\"," +
+                "\"engine\":\"fakedb\"," +
+                "\"host\":\"rdshost\"," +
+                "\"port\":\"7890\"," +
+                "\"dbname\":\"mydb\"}";
 
-        AWSSecretsManager sm = AWSSecretsManagerClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(localstack.getAccessKey(), localstack.getSecretKey())))
+        AWSCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(
+                new BasicAWSCredentials(localstack.getAccessKey(), localstack.getSecretKey()));
+
+        AWSSecretsManagerClientBuilder.standard()
+                .withCredentials(credentialsProvider)
                 .withEndpointConfiguration(localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER))
-                .build();
-
-        SECRET1 = sm.putSecretValue(new PutSecretValueRequest().withSecretString(secret1).withSecretId("secret1"));
-        assertNotNull(SECRET1);
-
-        SECRET2 = sm.putSecretValue(new PutSecretValueRequest().withSecretString(secret2).withSecretId("secret2"));
-        assertNotNull(SECRET2);
+                .build()
+                .putSecretValue(new PutSecretValueRequest().withSecretString(rdsSecret).withSecretId("rdsSecret"));
     }
 
     @BQApp(skipRun = true)
@@ -82,42 +81,32 @@ public class AwsSecretsConfigurationLoaderIT {
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.signingRegion", localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER).getSigningRegion()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.serviceEndpoint", localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER).getServiceEndpoint()))
 
-            // load some base config.. Secrets will be merged on top of it
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.a.user", "a_uname"))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.a.password", "a_secret"))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.b.c.user", "bc_uname"))
+            // base config. Secrets will be merged on top
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.a.type", "hikari"))
 
-            // configure and enable AwsSecretsConfigurationLoader that we are testing
-            // test lookup by both name and ARN
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[0].awsName", SECRET1.getName()))
+            // configure RDS Secret
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[0].awsName", "rdsSecret"))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[0].jsonTransformer", "rds-to-hikari-datasource"))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[0].mergePath", "a"))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[1].awsName", SECRET2.getARN()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[1].mergePath", "b.c"))
 
             .createRuntime();
 
     @Test
-    public void testConfigMerged() {
+    public void testRdsConfigTranslatedAndMerged() {
 
-        UserProfile a = app.getInstance(ConfigurationFactory.class).config(UserProfile.class, "a");
-        assertEquals("a_uname", a.user);
-        assertEquals("y_secret", a.password);
+        HikariConfig config = app.getInstance(ConfigurationFactory.class)
+                .config(TestHikariFactory.class, "a")
+                .toConfig();
 
-        UserProfile bc = app.getInstance(ConfigurationFactory.class).config(UserProfile.class, "b.c");
-        assertEquals("z_uname", bc.user);
-        assertEquals("z_secret", bc.password);
+        assertEquals("jdbc:fakedb://rdshost:7890/mydb", config.getJdbcUrl());
+        assertEquals("rds_user", config.getUsername());
+        assertEquals("rds_password", config.getPassword());
     }
 
-    public static final class UserProfile {
-        private String user;
-        private String password;
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
-        public void setUser(String user) {
-            this.user = user;
+    public static final class TestHikariFactory extends HikariCPManagedDataSourceFactory {
+        public HikariConfig toConfig() {
+            return super.toConfiguration("dummy");
         }
     }
+
 }
