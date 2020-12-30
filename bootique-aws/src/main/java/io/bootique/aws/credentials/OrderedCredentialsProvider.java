@@ -16,32 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package io.bootique.aws.credentials;
 
-package io.bootique.aws;
+import com.amazonaws.auth.AWSCredentialsProvider;
 
-import io.bootique.ConfigModule;
-import io.bootique.aws.credentials.OrderedCredentialsProvider;
-import io.bootique.config.ConfigurationFactory;
-import io.bootique.di.Binder;
-import io.bootique.di.Provides;
+/**
+ * @since 2.0.B1
+ */
+public class OrderedCredentialsProvider {
 
-import javax.inject.Singleton;
-import java.util.Set;
+    private final AWSCredentialsProvider provider;
+    private final int order;
 
-public class AwsModule extends ConfigModule {
-
-    public static AwsModuleExtender extend(Binder binder) {
-        return new AwsModuleExtender(binder);
+    public OrderedCredentialsProvider(AWSCredentialsProvider provider, int order) {
+        this.provider = provider;
+        this.order = order;
     }
 
-    @Override
-    public void configure(Binder binder) {
-        AwsModule.extend(binder).initAllExtensions();
+    public AWSCredentialsProvider getProvider() {
+        return provider;
     }
 
-    @Provides
-    @Singleton
-    AwsConfig provideConfig(ConfigurationFactory configFactory, Set<OrderedCredentialsProvider> credentialsProviders) {
-        return config(AwsConfigFactory.class, configFactory).createConfig(credentialsProviders);
+    public int getOrder() {
+        return order;
     }
 }

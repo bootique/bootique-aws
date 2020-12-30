@@ -4,6 +4,7 @@
 * #6 Upgrade AWS libs to 1.11.913
 * #7 Integrate EndpointConfiguration in each service config
 * #8 bootique-aws-secrets: support for secret JSON transformers
+* #9 Configurable credentials providers chain
 
 ## 1.0.RC1
 

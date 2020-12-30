@@ -19,10 +19,17 @@
 
 package io.bootique.aws;
 
-import com.amazonaws.auth.*;
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.AWSCredentialsProviderChain;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
+import io.bootique.aws.credentials.OrderedCredentialsProvider;
+
+import java.util.Comparator;
+import java.util.Set;
 
 @BQConfig
 public class AwsConfigFactory {
@@ -47,23 +54,34 @@ public class AwsConfigFactory {
         this.defaultRegion = defaultRegion;
     }
 
-    public AwsConfig createConfig() {
-        return new AwsConfig(createDefaultRegion(), createCredentialsProvider());
+    public AwsConfig createConfig(Set<OrderedCredentialsProvider> credentialsProviders) {
+        return new AwsConfig(createDefaultRegion(), createCredentialsProvider(credentialsProviders));
     }
 
-    protected AWSCredentialsProvider createCredentialsProvider() {
-        AWSCredentials credentials = createCredentials();
-        return new AWSStaticCredentialsProvider(credentials);
+    protected AWSCredentialsProvider createCredentialsProvider(Set<OrderedCredentialsProvider> altCredentialsProviders) {
+        AWSCredentialsProvider provider1 = createBootiqueCredentialsProvider();
+
+        // Bootique configuration of the credentials takes precedence over other preconfigured strategies
+        if (provider1 != null) {
+            return provider1;
+        }
+
+        AWSCredentialsProvider provider2 = createCredentailsProviderChain(altCredentialsProviders);
+        if (provider2 != null) {
+            return provider2;
+        }
+
+        throw new IllegalStateException("No accessKey/secretKey configured, and no alternative credentials providers specified");
     }
 
-    protected AWSCredentials createCredentials() {
+    protected AWSCredentialsProvider createBootiqueCredentialsProvider() {
 
         if (accessKey == null && secretKey == null) {
-            return new AnonymousAWSCredentials();
+            return null;
         }
 
         if (accessKey != null && secretKey != null) {
-            return new BasicAWSCredentials(accessKey, secretKey);
+            return new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey));
         }
 
         // partial configuration...
@@ -72,6 +90,24 @@ public class AwsConfigFactory {
         } else {
             throw new IllegalStateException("'accessKey' is set, but 'secretKey' is not");
         }
+    }
+
+    protected AWSCredentialsProvider createCredentailsProviderChain(Set<OrderedCredentialsProvider> credentialsProviders) {
+
+        if (credentialsProviders.isEmpty()) {
+            return null;
+        }
+
+        if (credentialsProviders.size() == 1) {
+            return credentialsProviders.iterator().next().getProvider();
+        }
+
+        AWSCredentialsProvider[] sorted = credentialsProviders.stream()
+                .sorted(Comparator.comparing(OrderedCredentialsProvider::getOrder))
+                .map(OrderedCredentialsProvider::getProvider)
+                .toArray(AWSCredentialsProvider[]::new);
+
+        return new AWSCredentialsProviderChain(sorted);
     }
 
     protected Regions createDefaultRegion() {

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.bootique.aws.AwsConfig;
 import io.bootique.aws.AwsConfigFactory;
+import io.bootique.aws.credentials.OrderedCredentialsProvider;
 import io.bootique.config.ConfigurationFactory;
 import io.bootique.config.jackson.JsonConfigurationFactory;
 import io.bootique.config.jackson.JsonConfigurationLoader;
@@ -31,6 +32,7 @@ import io.bootique.log.BootLogger;
 
 import javax.inject.Inject;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @since 2.0.B1
@@ -42,12 +44,19 @@ public class AwsSecretsConfigurationLoader implements JsonConfigurationLoader {
 
     private final JacksonService jackson;
     private final BootLogger bootLogger;
+    private final Set<OrderedCredentialsProvider> credentialsProviders;
     private final Map<String, AwsJsonTransformer> transformers;
 
     @Inject
-    public AwsSecretsConfigurationLoader(JacksonService jackson, BootLogger bootLogger, Map<String, AwsJsonTransformer> transformers) {
+    public AwsSecretsConfigurationLoader(
+            JacksonService jackson,
+            BootLogger bootLogger,
+            Set<OrderedCredentialsProvider> credentialsProviders,
+            Map<String, AwsJsonTransformer> transformers) {
+
         this.jackson = jackson;
         this.bootLogger = bootLogger;
+        this.credentialsProviders = credentialsProviders;
         this.transformers = transformers;
     }
 
@@ -72,7 +81,7 @@ public class AwsSecretsConfigurationLoader implements JsonConfigurationLoader {
             return mutableInput;
         }
 
-        AwsConfig config = configFactory.config(AwsConfigFactory.class, "aws").createConfig();
+        AwsConfig config = configFactory.config(AwsConfigFactory.class, "aws").createConfig(credentialsProviders);
         return secretsFactory.updateConfiguration(mutableInput, config, jsonMapper, transformers, bootLogger);
     }
 }
