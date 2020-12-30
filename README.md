@@ -110,7 +110,7 @@ public class MyHandler implements RequestHandler<Object, String> {
 }
 ```
 The main difference with a standalone app is that there's no CLI, and you only "create" a BQRuntime, but do not
-"run" a command. You'd usually make the `runtime` static to speed up processing of warmed-up lambda instances.
+"run" a command. You'd usually make the `runtime` static to speed up responses from warmed-up lambda instances.
 Within the `handle*` method you'd obtain Bootique objects by calling `runtime.getInstance(MyType.class)` instead of
 injection. Otherwise, all the Bootique APIs and practices should work unchanged.
 
