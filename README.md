@@ -67,7 +67,7 @@ TODO: other strategies for credentials loading
 
 ## AWS Secret Manager as a Source of App Configuration
 
-Often parts of the app configuration (especially things like access credentials) are stored in the 
+Often parts of the app configuration (especially various service credentials) are stored in the 
 [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/) as "secrets". Secrets are returned as simple JSON objects. 
 Bootique provides a way to load and merge them into the main app configuration tree. To work with the Secrets Manager
 you will need the following dependency:
@@ -89,8 +89,8 @@ awssecrets:
          # A symbolic name of a class implementing AwsJsonTransformer that would 
          # transform the secret's JSON into a form compatible with the app config.
 ```
-If you are not using a transformer, make sure that secret field names exactly match your target configuration properties.
-Registering a custom transformer is done via the following API:
+If secret field names exactly match your target configuration properties, you don't need a transformer. Otherwise 
+write a class implementing `AwsJsonTransformer` and register it like this:
 ```java
 AwsSecretsModule.extend(binder).addTransformer("mytransformer", MyTransformer.class);
 ```
