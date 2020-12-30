@@ -95,7 +95,7 @@ AwsModule.extend(binder).addEC2ContainerCredentialsProvider();
 
 Minimal footprint and quick startup time of Bootique makes it a perfect technology for writing 
 [AWS Lambdas in Java](https://docs.aws.amazon.com/lambda/latest/dg/lambda-java.html). Instead of a "main" class in a 
-normal app, you would implement a Lambda "handler" with Bootique stack in it:
+normal app, you would implement a Lambda "handler" with Bootique runtime included in it:
 ```java
 public class MyHandler implements RequestHandler<Object, String> {
 
