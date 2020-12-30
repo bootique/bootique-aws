@@ -82,62 +82,19 @@ AwsModule.extend(binder)
 Note that Bootique configuration will still take precedence over these providers, and only if the configuration is
 missing, the providers would be invoked.
 
-## AWS Secret Manager as a Source of App Configuration
-
-Often parts of the app configuration (especially various service credentials) are stored in the 
-[AWS Secrets Manager](https://aws.amazon.com/secrets-manager/) as "secrets". Secrets are returned as simple JSON objects. 
-Bootique provides a way to load and merge them into the main app configuration tree. To work with the Secrets Manager
-you will need the following dependency:
-
-```xml
-<dependency>
-	<groupId>io.bootique.aws</groupId>
-	<artifactId>bootique-aws-secrets</artifactId>
-</dependency>
-```
-Once you include it, you'd list the secrets to load and merge with the rest of the app configuration using a config
-similar to this:
-```yaml
-awssecrets:
-  secrets:
-    - awsName: "mysecret" # Either a human-readable name of a secret or an ARN
-      mergePath: "myapp.subconfig" # Where in a config tree to place the loaded secret
-      jsonTransformer: "mytransformer" # Optional. 
-         # A symbolic name of a class implementing AwsJsonTransformer that would 
-         # transform the secret's JSON into a form compatible with the app config.
-```
-If secret field names exactly match your target configuration properties, you don't need a transformer. Otherwise 
-write a class implementing `AwsJsonTransformer` and register it like this:
-```java
-AwsSecretsModule.extend(binder).addTransformer("mytransformer", MyTransformer.class);
-```
-Bootique strives to provide built-in transformers for the known secret structures. Here is an example showing how to 
-load a standard RDS connection secret (that has a predefined format) and transform it to a `bootique-jdbc` Hikari 
-DataSource configuration:
-
-```yaml
-awssecrets:
-  secrets:
-    - awsName: "myRDSSecret"
-      mergePath: "jdbc.mydb"
-      jsonTransformer: "rds-to-hikari-datasource" # This transformer is provided by 
-          # Bootique out of the box and will transform a standard RDS connection secret
-          # into a Hikari config with "jdbcUrl", "username" and "password" keys.
-```
-
 ## AWS EC2 and ECS
 
-You don't need explicit `accessKey` / `secretKey` configuration when running on EC2 or ECS (and should probably avoid
-using it), as they provide a service to look up credentials. To enable no-config deployment in these environments, add
-the following credentials provider:
+You don't need an explicit `accessKey` / `secretKey` configuration when running on EC2 or ECS, as these environments 
+provide a built-in metadata service to look up credentials. To enable no-config deployment in EC2 or ECS, add the 
+following credentials provider:
 ```java
 AwsModule.extend(binder).addEC2ContainerCredentialsProvider();
 ```
 
 ## AWS Lambdas
 
-Minimal footprint and quick startup time of Bootique makes it perfect for writing AWS Java Lambdas. From the Bootique 
-perspective Lambda is just another kind of Java app. Lambda's "handler" class may look like this:
+Minimal footprint and quick startup time of Bootique makes it a perfect technology for writing AWS Java Lambdas. 
+From the Bootique perspective Lambda is just another kind of Java app. Lambda's "handler" class may look like this:
 ```java
 public class MyHandler implements RequestHandler<Object, String> {
 
@@ -151,20 +108,62 @@ public class MyHandler implements RequestHandler<Object, String> {
     }
 }
 ```
-The main difference with a stadalone app is that there's no CLI involved, and you only "create" a BQRuntime, but do not 
-"run" a command within it. You'd usually make the `runtime` static to speed up processing of warmed-up lambda instances. 
-Within the `handle` method you'd obtain Bootique objects by calling `runtime.getInstance(MyType.class)` instead of 
-injection. Otherwise all the Bootique APIs and practices should work unchanged. 
+The main difference with a standalone app is that there's no CLI, and you only "create" a BQRuntime, but do not
+"run" a command. You'd usually make the `runtime` static to speed up processing of warmed-up lambda instances.
+Within the `handle*` method you'd obtain Bootique objects by calling `runtime.getInstance(MyType.class)` instead of
+injection. Otherwise, all the Bootique APIs and practices should work unchanged.
 
-Since Lambda environment already includes credentials to access the rest of AWS as shell variables, you can avoid
-`accessKey` / `secretKey` configuration. Instead add an extra line when creating a `BQRuntime`:
-
+Since Lambda environment already includes credentials to access the rest of AWS as shell variables, you don't need an
+explicit `accessKey` / `secretKey` configuration. Instead, add an extra line to add a Lambda-friendly credentials 
+provider:
 ```java
 private static BQRuntime runtime = Bootique.app()
     .autoLoadModules()
      // this will pick up credentials from the environment vars
     .module(b -> AwsModule.extend(b).addLambdaCredentialsProvider())
     .createRuntime();
+```
+
+## AWS Secret Manager as a Source of App Configuration
+
+Often parts of the app configuration (especially various passwords) are stored as "secrets" in the 
+[AWS Secrets Manager](https://aws.amazon.com/secrets-manager/). WHen you query a Secrets Manager, secrets are returned 
+as simple JSON objects. Bootique provides a way to load and merge them into the main app configuration tree. To work 
+with the Secrets Manager you will need the following dependency:
+
+```xml
+<dependency>
+	<groupId>io.bootique.aws</groupId>
+	<artifactId>bootique-aws-secrets</artifactId>
+</dependency>
+```
+And then you'd list any secrets that should be included in the app configuration:
+```yaml
+awssecrets:
+  secrets:
+    - awsName: "mysecret" # Either a human-readable name of a secret or an ARN
+      mergePath: "myapp.subconfig" # Where in a config tree to place the loaded secret
+      jsonTransformer: "mytransformer" # Optional. 
+         # A symbolic name of a class implementing AwsJsonTransformer that would 
+         # transform the secret's JSON into a form compatible with the app config.
+```
+If secret field names match exactly your target configuration properties, you won't need a transformer. Otherwise, 
+write a class implementing `AwsJsonTransformer` and register it like this:
+```java
+AwsSecretsModule.extend(binder).addTransformer("mytransformer", MyTransformer.class);
+```
+Bootique strives to provide built-in transformers for the known secret formats. Here is an example showing how to 
+load a standard RDS connection secret (that has a predefined format) and transform it to a `bootique-jdbc` Hikari 
+DataSource configuration:
+
+```yaml
+awssecrets:
+  secrets:
+    - awsName: "myRDSSecret"
+      mergePath: "jdbc.mydb"
+      jsonTransformer: "rds-to-hikari-datasource" # This transformer is provided by 
+          # Bootique out of the box and will transform a standard RDS connection secret
+          # into a Hikari config with "jdbcUrl", "username" and "password" keys.
 ```
 
 ## Custom Endpoints and Testing
