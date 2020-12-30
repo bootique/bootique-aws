@@ -18,7 +18,6 @@
  */
 package io.bootique.aws.secrets;
 
-import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.bootique.aws.AwsConfig;
@@ -67,14 +66,13 @@ public class AwsSecretsConfigurationLoader implements JsonConfigurationLoader {
         ObjectMapper jsonMapper = jackson.newObjectMapper();
 
         ConfigurationFactory configFactory = new JsonConfigurationFactory(mutableInput, jsonMapper);
-        AwsSecretConfigsFactory secretsConfigFactory = configFactory.config(AwsSecretConfigsFactory.class, "awssecrets");
+        AwsSecretsFactory secretsFactory = configFactory.config(AwsSecretsFactory.class, "awssecrets");
 
-        if (secretsConfigFactory.isEmpty()) {
+        if (secretsFactory.isEmpty()) {
             return mutableInput;
         }
 
         AwsConfig config = configFactory.config(AwsConfigFactory.class, "aws").createConfig();
-        AWSSecretsManager secretsManager = new AwsSecretsManagerFactory().create(config);
-        return secretsConfigFactory.updateConfiguration(bootLogger, secretsManager, jsonMapper, transformers, mutableInput);
+        return secretsFactory.updateConfiguration(mutableInput, config, jsonMapper, transformers, bootLogger);
     }
 }

@@ -20,23 +20,16 @@
 package io.bootique.aws;
 
 import com.amazonaws.auth.*;
-import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.regions.Regions;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @BQConfig
 public class AwsConfigFactory {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AwsConfigFactory.class);
-
     private String accessKey;
     private String secretKey;
     private String defaultRegion;
-    private String serviceEndpoint;
-    private String signingRegion;
 
     @BQConfigProperty("Sets AWS account credentials 'accessKey'")
     public void setAccessKey(String accessKey) {
@@ -54,24 +47,8 @@ public class AwsConfigFactory {
         this.defaultRegion = defaultRegion;
     }
 
-    /**
-     * @since 2.0.B1
-     */
-    @BQConfigProperty("Optional alternative service endpoint. Useful local tests.")
-    public void setServiceEndpoint(String serviceEndpoint) {
-        this.serviceEndpoint = serviceEndpoint;
-    }
-
-    /**
-     * @since 2.0.B1
-     */
-    @BQConfigProperty("Optional signing region to use with alternative service endpoint. Ignored if 'serviceEndpoint' is not set")
-    public void setSigningRegion(String signingRegion) {
-        this.signingRegion = signingRegion;
-    }
-
     public AwsConfig createConfig() {
-        return new AwsConfig(createDefaultRegion(), createEndpointConfig(), createCredentialsProvider());
+        return new AwsConfig(createDefaultRegion(), createCredentialsProvider());
     }
 
     protected AWSCredentialsProvider createCredentialsProvider() {
@@ -97,24 +74,7 @@ public class AwsConfigFactory {
         }
     }
 
-    protected AwsClientBuilder.EndpointConfiguration createEndpointConfig() {
-        return serviceEndpoint != null ? new AwsClientBuilder.EndpointConfiguration(serviceEndpoint, signingRegion) : null;
-    }
-
     protected Regions createDefaultRegion() {
-
-        // It appears AwsClientBuilder can take either a region or an endpoint configuration (or nothing at all),
-        // but not both.
-
-        if (serviceEndpoint != null) {
-
-            if (defaultRegion != null) {
-                LOGGER.warn("Ignoring 'aws.defaultRegion' property, as 'aws.serviceEndpoint' is set");
-            }
-
-            return null;
-        }
-
         return defaultRegion != null ? Regions.fromName(defaultRegion) : null;
     }
 }

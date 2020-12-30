@@ -23,6 +23,7 @@ import io.bootique.BQCoreModule;
 import io.bootique.ConfigModule;
 import io.bootique.aws.AwsConfig;
 import io.bootique.aws.secrets.transformer.RDSToHikariDataSourceTransformer;
+import io.bootique.config.ConfigurationFactory;
 import io.bootique.di.Binder;
 import io.bootique.di.Provides;
 
@@ -49,7 +50,7 @@ public class AwsSecretsModule extends ConfigModule {
 
     @Singleton
     @Provides
-    AWSSecretsManager provideSecretsManager(AwsConfig config) {
-        return new AwsSecretsManagerFactory().create(config);
+    AWSSecretsManager provideSecretsManager(ConfigurationFactory configFactory, AwsConfig config) {
+        return config(AwsSecretsFactory.class, configFactory).createSecretsManager(config);
     }
 }

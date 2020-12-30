@@ -20,7 +20,6 @@
 package io.bootique.aws;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.regions.Regions;
 
 import java.util.Objects;
@@ -29,16 +28,13 @@ import java.util.Optional;
 public class AwsConfig {
 
     private final Regions defaultRegion;
-    private final AwsClientBuilder.EndpointConfiguration endpointConfiguration;
     private final AWSCredentialsProvider credentialsProvider;
 
     public AwsConfig(
             Regions defaultRegion,
-            AwsClientBuilder.EndpointConfiguration endpointConfiguration,
             AWSCredentialsProvider credentialsProvider) {
 
         this.defaultRegion = defaultRegion;
-        this.endpointConfiguration = endpointConfiguration;
         this.credentialsProvider = Objects.requireNonNull(credentialsProvider);
     }
 
@@ -51,12 +47,5 @@ public class AwsConfig {
 
     public Optional<Regions> getDefaultRegion() {
         return Optional.ofNullable(defaultRegion);
-    }
-
-    /**
-     * @since 2.0.B1
-     */
-    public Optional<AwsClientBuilder.EndpointConfiguration> getEndpointConfiguration() {
-        return Optional.ofNullable(endpointConfiguration);
     }
 }

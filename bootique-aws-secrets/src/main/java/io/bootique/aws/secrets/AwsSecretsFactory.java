@@ -19,25 +19,31 @@
 package io.bootique.aws.secrets;
 
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
+import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
+import io.bootique.aws.AwsConfig;
+import io.bootique.aws.AwsServiceFactory;
 import io.bootique.log.BootLogger;
 
 import java.util.List;
 import java.util.Map;
 
 /**
+ * The factory is used in two places over the same configuration structure: {@link AwsSecretsConfigurationLoader} to
+ * update config, and the {@link AwsSecretsModule} to create injectable AWSSecretsManager.
+ *
  * @since 2.0.B1
  */
 @BQConfig
-public class AwsSecretConfigsFactory {
+public class AwsSecretsFactory extends AwsServiceFactory {
 
-    private List<AwsSecretConfigFactory> secrets;
+    private List<AwsSecretFactory> secrets;
 
     @BQConfigProperty("A list of AWS secrets that must be loaded and merged into the app configuration")
-    public void setSecrets(List<AwsSecretConfigFactory> secrets) {
+    public void setSecrets(List<AwsSecretFactory> secrets) {
         this.secrets = secrets;
     }
 
@@ -45,15 +51,22 @@ public class AwsSecretConfigsFactory {
         return secrets == null || secrets.isEmpty();
     }
 
+    public AWSSecretsManager createSecretsManager(AwsConfig config) {
+        return configure(AWSSecretsManagerClientBuilder.standard(), config).build();
+    }
+
     public JsonNode updateConfiguration(
-            BootLogger bootLogger,
-            AWSSecretsManager secretsManager,
+            JsonNode mutableInput,
+            AwsConfig config,
             ObjectMapper jsonMapper,
             Map<String, AwsJsonTransformer> transformers,
-            JsonNode mutableInput) {
+            BootLogger bootLogger) {
 
         if (!isEmpty()) {
-            for (AwsSecretConfigFactory configFactory : secrets) {
+            // note that we are not using singleton AWSSecretsManager. Since "updateConfiguration" is intended to be
+            // called from JsonConfigurationLoader, it needs to create most of its AWS machinery right on the spot.
+            AWSSecretsManager secretsManager = createSecretsManager(config);
+            for (AwsSecretFactory configFactory : secrets) {
                 mutableInput = configFactory.updateConfiguration(bootLogger, secretsManager, jsonMapper, transformers, mutableInput);
             }
         }

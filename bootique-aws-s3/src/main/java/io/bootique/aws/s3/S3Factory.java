@@ -21,20 +21,14 @@ package io.bootique.aws.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import io.bootique.annotation.BQConfig;
 import io.bootique.aws.AwsConfig;
+import io.bootique.aws.AwsServiceFactory;
 
-// TODO: other builder settings... once we have extra properties make this BQConfig...
-public class S3Factory {
+@BQConfig
+public class S3Factory extends AwsServiceFactory {
 
     public AmazonS3 createS3(AwsConfig config) {
-
-        AmazonS3ClientBuilder builder = AmazonS3ClientBuilder
-                .standard()
-                .withCredentials(config.getCredentialsProvider());
-
-        config.getDefaultRegion().ifPresent(builder::withRegion);
-        config.getEndpointConfiguration().ifPresent(builder::withEndpointConfiguration);
-
-        return builder.build();
+        return configure(AmazonS3ClientBuilder.standard(), config).build();
     }
 }

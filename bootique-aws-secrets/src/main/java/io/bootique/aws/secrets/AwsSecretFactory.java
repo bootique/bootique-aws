@@ -41,27 +41,27 @@ import java.util.Objects;
  * @since 2.0.B1
  */
 @BQConfig
-public class AwsSecretConfigFactory {
+public class AwsSecretFactory {
 
     private String awsName;
     private String mergePath;
     private String jsonTransformer;
 
     @BQConfigProperty("Secret ARN or name within AWS SecretsManager")
-    public AwsSecretConfigFactory setAwsName(String awsName) {
+    public AwsSecretFactory setAwsName(String awsName) {
         this.awsName = awsName;
         return this;
     }
 
     @BQConfigProperty("App configuration path to merge secret values to. E.g. 'jdbc.mydb'")
-    public AwsSecretConfigFactory setMergePath(String mergePath) {
+    public AwsSecretFactory setMergePath(String mergePath) {
         this.mergePath = mergePath;
         return this;
     }
 
     @BQConfigProperty("A optional name of a registered transformer to process JSON coming from AWS Secrets " +
             "Manager to a format appropriate for the target Bootique config")
-    public AwsSecretConfigFactory setJsonTransformer(String jsonTransformer) {
+    public AwsSecretFactory setJsonTransformer(String jsonTransformer) {
         this.jsonTransformer = jsonTransformer;
         return this;
     }

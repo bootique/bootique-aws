@@ -32,7 +32,6 @@ import io.bootique.jdbc.hikaricp.HikariCPManagedDataSourceFactory;
 import io.bootique.junit5.BQApp;
 import io.bootique.junit5.BQTest;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -41,7 +40,6 @@ import org.testcontainers.utility.DockerImageName;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Disabled("Until no-config Secrets Manager starts to work")
 @Testcontainers
 @BQTest
 public class RDSToHikariDataSourceTransformerIT {
@@ -78,8 +76,8 @@ public class RDSToHikariDataSourceTransformerIT {
             .autoLoadModules()
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.accessKey", localstack.getAccessKey()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.secretKey", localstack.getSecretKey()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.signingRegion", localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER).getSigningRegion()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.serviceEndpoint", localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER).getServiceEndpoint()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.signingRegion", localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER).getSigningRegion()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.serviceEndpoint", localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER).getServiceEndpoint()))
 
             // base config. Secrets will be merged on top
             .module(b -> BQCoreModule.extend(b).setProperty("bq.a.type", "hikari"))
