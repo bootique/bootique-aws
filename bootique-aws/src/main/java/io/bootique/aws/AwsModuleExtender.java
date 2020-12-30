@@ -18,8 +18,8 @@
  */
 package io.bootique.aws;
 
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
+import com.amazonaws.auth.*;
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import io.bootique.ModuleExtender;
 import io.bootique.aws.credentials.OrderedCredentialsProvider;
 import io.bootique.di.Binder;
@@ -30,7 +30,9 @@ import io.bootique.di.SetBuilder;
  */
 public class AwsModuleExtender extends ModuleExtender<AwsModuleExtender> {
 
-    public static final int LAMBDA_CREDENTIALS_PROVIDER_ORDER = 10;
+    public static final int DEFAULT_CREDENTIALS_PROVIDER_ORDER = 10;
+    public static final int LAMBDA_CREDENTIALS_PROVIDER_ORDER = DEFAULT_CREDENTIALS_PROVIDER_ORDER + 10;
+    public static final int EC2_CONTAINER_CREDENTIALS_PROVIDER_ORDER = LAMBDA_CREDENTIALS_PROVIDER_ORDER + 10;
 
     private SetBuilder<OrderedCredentialsProvider> orderedCredentialsProviders;
 
@@ -42,6 +44,10 @@ public class AwsModuleExtender extends ModuleExtender<AwsModuleExtender> {
     public AwsModuleExtender initAllExtensions() {
         contributeOrderedCredentialsProviders();
         return this;
+    }
+
+    public AwsModuleExtender addAwsCredentialsProviderChain() {
+        return addCredentialsProvider(DefaultAWSCredentialsProviderChain.getInstance(), DEFAULT_CREDENTIALS_PROVIDER_ORDER);
     }
 
     /**
@@ -56,11 +62,36 @@ public class AwsModuleExtender extends ModuleExtender<AwsModuleExtender> {
     }
 
     /**
+     * Registers a credentials provider that looks up credentials EC2 container metadata serice.
+     *
+     * @see #EC2_CONTAINER_CREDENTIALS_PROVIDER_ORDER
+     */
+    public AwsModuleExtender addEC2ContainerCredentialsProvider() {
+        return addEC2ContainerCredentialsProvider(EC2_CONTAINER_CREDENTIALS_PROVIDER_ORDER);
+    }
+
+    /**
      * Registers a credentials provider, that looks up credentials using standard AWS env variables: AWS_ACCESS_KEY_ID,
      * AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_SECRET_ACCESS_KEY.
      */
     public AwsModuleExtender addEnvVarsCredentialsProvider(int order) {
         return addCredentialsProvider(new EnvironmentVariableCredentialsProvider(), order);
+    }
+
+    public AwsModuleExtender addProfileCredentialsProvider(int order) {
+        return addCredentialsProvider(new ProfileCredentialsProvider(), order);
+    }
+
+    public AwsModuleExtender addWebIdentityTokenCredentialsProvider(int order) {
+        return addCredentialsProvider(WebIdentityTokenCredentialsProvider.create(), order);
+    }
+
+    public AwsModuleExtender addSystemPropertiesCredentialsProvider(int order) {
+        return addCredentialsProvider(new SystemPropertiesCredentialsProvider(), order);
+    }
+
+    public AwsModuleExtender addEC2ContainerCredentialsProvider(int order) {
+        return addCredentialsProvider(new EC2ContainerCredentialsProviderWrapper(), order);
     }
 
     public AwsModuleExtender addCredentialsProvider(AWSCredentialsProvider provider, int order) {
