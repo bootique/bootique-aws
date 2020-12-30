@@ -62,7 +62,7 @@ private AmazonS3 s3Client;
 _If Bootique doesn't yet provide a module to call your favorite AWS service, you can easily write your own.
 Refer to "bootique-aws-s3" source code for a good example. And don't forget to ping us, so we make it available in Bootique._
 
-AWS client library provides its own 
+AWS client library has its own 
 [credential provider chain](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html) that attempts
 to load credentials from various sources (env vars, system properties, profile files, etc.). It is disabled by default
 in Bootique to avoid unexpected interactions between the app and the environment (e.g. a misconfigured unit test 
