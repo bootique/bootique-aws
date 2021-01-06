@@ -28,7 +28,6 @@ import io.bootique.aws.AwsConfig;
 import io.bootique.aws.AwsServiceFactory;
 import io.bootique.log.BootLogger;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,10 +39,12 @@ import java.util.Map;
 @BQConfig
 public class AwsSecretsFactory extends AwsServiceFactory {
 
-    private List<AwsSecretFactory> secrets;
+    private Map<String, AwsSecretFactory> secrets;
 
-    @BQConfigProperty("A list of AWS secrets that must be loaded and merged into the app configuration")
-    public void setSecrets(List<AwsSecretFactory> secrets) {
+    @BQConfigProperty("A map of AWS secrets that must be loaded and merged into the app configuration. " +
+            "Keys in the map are purely symbolic unique names not tied to the AWS naming. " +
+            "They are useful for referencing specific secrets when overriding configuration")
+    public void setSecrets(Map<String, AwsSecretFactory> secrets) {
         this.secrets = secrets;
     }
 
@@ -66,7 +67,9 @@ public class AwsSecretsFactory extends AwsServiceFactory {
             // note that we are not using singleton AWSSecretsManager. Since "updateConfiguration" is intended to be
             // called from JsonConfigurationLoader, it needs to create most of its AWS machinery right on the spot.
             AWSSecretsManager secretsManager = createSecretsManager(config);
-            for (AwsSecretFactory configFactory : secrets) {
+
+            // ignoring secret key names... They are used purely for reference when overriding configuration.
+            for (AwsSecretFactory configFactory : secrets.values()) {
                 mutableInput = configFactory.updateConfiguration(bootLogger, secretsManager, jsonMapper, transformers, mutableInput);
             }
         }

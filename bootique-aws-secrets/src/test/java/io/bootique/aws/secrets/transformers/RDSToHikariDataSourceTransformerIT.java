@@ -83,9 +83,9 @@ public class RDSToHikariDataSourceTransformerIT {
             .module(b -> BQCoreModule.extend(b).setProperty("bq.a.type", "hikari"))
 
             // configure RDS Secret
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[0].awsName", "rdsSecret"))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[0].jsonTransformer", "rds-to-hikari-datasource"))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[0].mergePath", "a"))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets.s1.awsName", "rdsSecret"))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets.s1.jsonTransformer", "rds-to-hikari-datasource"))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets.s1.mergePath", "a"))
 
             .createRuntime();
 

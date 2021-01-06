@@ -87,10 +87,10 @@ public class AwsSecretsConfigurationLoaderIT {
 
             // configure and enable AwsSecretsConfigurationLoader that we are testing
             // test lookup by both name and ARN
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[0].awsName", SECRET1.getName()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[0].mergePath", "a"))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[1].awsName", SECRET2.getARN()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets[1].mergePath", "b.c"))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets.s1.awsName", SECRET1.getName()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets.s1.mergePath", "a"))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets.s2.awsName", SECRET2.getARN()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.secrets.s2.mergePath", "b.c"))
 
             .createRuntime();
 

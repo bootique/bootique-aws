@@ -142,7 +142,8 @@ And then you'd list any secrets that should be included in the app configuration
 ```yaml
 awssecrets:
   secrets:
-    - awsName: "mysecret" # Either a human-readable name of a secret or an ARN
+    secret1:
+      awsName: "mysecret" # Either a human-readable AWS name of a secret or an AWS ARN
       mergePath: "myapp.subconfig" # Where in a config tree to place the loaded secret
       jsonTransformer: "mytransformer" # Optional. 
          # A symbolic name of a class implementing AwsJsonTransformer that would 
@@ -160,7 +161,8 @@ DataSource configuration:
 ```yaml
 awssecrets:
   secrets:
-    - awsName: "myRDSSecret"
+    secret1: 
+      awsName: "myRDSSecret"
       mergePath: "jdbc.mydb"
       jsonTransformer: "rds-to-hikari-datasource" # This transformer is provided by 
           # Bootique out of the box and will transform a standard RDS connection secret
