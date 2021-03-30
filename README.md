@@ -17,7 +17,7 @@
   under the License.
   -->
 
-[![Build Status](https://travis-ci.org/bootique/bootique-aws.svg)](https://travis-ci.org/bootique/bootique-aws)
+[![build test deploy 1.x](https://github.com/bootique/bootique-aws/actions/workflows/maven-1x.yml/badge.svg)](https://github.com/bootique/bootique-aws/actions/workflows/maven-1x.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/io.bootique.aws/bootique-aws.svg?colorB=brightgreen)](https://search.maven.org/artifact/io.bootique.aws/bootique-aws)
 
 # bootique-aws
