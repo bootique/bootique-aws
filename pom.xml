@@ -87,12 +87,23 @@
                 <artifactId>bootique-jdbc-hikaricp</artifactId>
                 <version>${bootique.version}</version>
             </dependency>
+            <!-- Importing testcontainers modules individually instead of using a BOM
+            to have more control over the transitive dependencies -->
             <dependency>
                 <groupId>org.testcontainers</groupId>
-                <artifactId>testcontainers-bom</artifactId>
+                <artifactId>localstack</artifactId>
                 <version>${testcontainers.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${testcontainers.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>
