@@ -27,27 +27,21 @@
         <version>3.0.M1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>bootique-aws</artifactId>
+    <artifactId>bootique-aws2-s3</artifactId>
     <packaging>jar</packaging>
 
-    <name>bootique-aws: Basic AWS integration with Bootique</name>
+    <name>bootique-aws2-s3: AWS SDK v2 S3 integration with Bootique</name>
 
     <dependencies>
         <!-- Compile dependencies -->
         <dependency>
-            <groupId>io.bootique</groupId>
-            <artifactId>bootique</artifactId>
-            <scope>compile</scope>
+            <groupId>io.bootique.aws</groupId>
+            <artifactId>bootique-aws2</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-core</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <scope>compile</scope>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
         </dependency>
 
         <!-- Unit test dependencies -->
@@ -59,6 +53,22 @@
         <dependency>
             <groupId>io.bootique</groupId>
             <artifactId>bootique-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>localstack</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- TODO: ugly... SDK v1 is needed by Testcontainers LocalStackContainer-->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

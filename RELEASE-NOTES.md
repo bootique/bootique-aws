@@ -1,3 +1,7 @@
+## 3.0.M1
+
+* #10 Integration with AWS Java SDK 2.x
+
 ## 2.0.B1
 
 * #5 Integrate support for AWS Secrets Manager

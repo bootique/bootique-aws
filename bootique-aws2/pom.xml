@@ -27,27 +27,24 @@
         <version>3.0.M1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>bootique-aws</artifactId>
+    <artifactId>bootique-aws2</artifactId>
     <packaging>jar</packaging>
 
-    <name>bootique-aws: Basic AWS integration with Bootique</name>
+    <name>bootique-aws2: Basic AWS SDK v2 integration with Bootique</name>
 
     <dependencies>
         <!-- Compile dependencies -->
         <dependency>
             <groupId>io.bootique</groupId>
             <artifactId>bootique</artifactId>
-            <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-core</artifactId>
-            <scope>compile</scope>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>aws-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <scope>compile</scope>
         </dependency>
 
         <!-- Unit test dependencies -->
