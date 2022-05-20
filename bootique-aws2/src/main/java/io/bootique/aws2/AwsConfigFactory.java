@@ -19,34 +19,21 @@
 
 package io.bootique.aws2;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
-import io.bootique.aws2.credentials.BasicAwsCredentials;
-import io.bootique.aws2.credentials.OrderedCredentialsProvider;
+import io.bootique.aws2.credentials.CredentialsConfigFactory;
+import io.bootique.config.PolymorphicConfiguration;
+import io.bootique.di.Injector;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
-import software.amazon.awssdk.auth.credentials.AwsCredentialsProviderChain;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 
-import java.util.Comparator;
-import java.util.Set;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = CredentialsConfigFactory.class)
 @BQConfig
-public class AwsConfigFactory {
+public abstract class AwsConfigFactory implements PolymorphicConfiguration {
 
-    private String accessKey;
-    private String secretKey;
     private String defaultRegion;
-
-    @BQConfigProperty("Sets AWS account credentials 'accessKey'")
-    public void setAccessKey(String accessKey) {
-        this.accessKey = accessKey;
-    }
-
-    @BQConfigProperty("AWS account credentials 'secretKey'")
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
 
     @BQConfigProperty("Optional default region to use for AWS calls. Ignored if 'serviceEndpoint' " +
             "is set (in which case 'signingRegion' property is used to mirror AWS conventions")
@@ -54,61 +41,11 @@ public class AwsConfigFactory {
         this.defaultRegion = defaultRegion;
     }
 
-    public AwsConfig createConfig(Set<OrderedCredentialsProvider> credentialsProviders) {
-        return new AwsConfig(createDefaultRegion(), createCredentialsProvider(credentialsProviders));
+    public AwsConfig createConfig(Injector injector) {
+        return new AwsConfig(createDefaultRegion(), createCredentialsProvider(injector));
     }
 
-    protected AwsCredentialsProvider createCredentialsProvider(Set<OrderedCredentialsProvider> altCredentialsProviders) {
-        AwsCredentialsProvider provider1 = createBootiqueCredentialsProvider();
-
-        // Bootique configuration of the credentials takes precedence over other preconfigured strategies
-        if (provider1 != null) {
-            return provider1;
-        }
-
-        AwsCredentialsProvider provider2 = createCredentialsProviderChain(altCredentialsProviders);
-        if (provider2 != null) {
-            return provider2;
-        }
-
-        throw new IllegalStateException("No accessKey/secretKey configured, and no alternative credentials providers specified");
-    }
-
-    protected AwsCredentialsProvider createBootiqueCredentialsProvider() {
-
-        if (accessKey == null && secretKey == null) {
-            return null;
-        }
-
-        if (accessKey != null && secretKey != null) {
-            return StaticCredentialsProvider.create(new BasicAwsCredentials(accessKey, secretKey));
-        }
-
-        // partial configuration...
-        if (accessKey == null) {
-            throw new IllegalStateException("'secretKey' is set, but 'accessKey' is not");
-        } else {
-            throw new IllegalStateException("'accessKey' is set, but 'secretKey' is not");
-        }
-    }
-
-    protected AwsCredentialsProvider createCredentialsProviderChain(Set<OrderedCredentialsProvider> credentialsProviders) {
-
-        if (credentialsProviders.isEmpty()) {
-            return null;
-        }
-
-        if (credentialsProviders.size() == 1) {
-            return credentialsProviders.iterator().next().getProvider();
-        }
-
-        AwsCredentialsProvider[] sorted = credentialsProviders.stream()
-                .sorted(Comparator.comparing(OrderedCredentialsProvider::getOrder))
-                .map(OrderedCredentialsProvider::getProvider)
-                .toArray(AwsCredentialsProvider[]::new);
-
-        return AwsCredentialsProviderChain.of(sorted);
-    }
+    protected abstract AwsCredentialsProvider createCredentialsProvider(Injector injector);
 
     protected Region createDefaultRegion() {
         return defaultRegion != null ? Region.of(defaultRegion) : null;

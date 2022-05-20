@@ -22,17 +22,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.bootique.aws2.AwsConfig;
 import io.bootique.aws2.AwsConfigFactory;
-import io.bootique.aws2.credentials.OrderedCredentialsProvider;
 import io.bootique.config.ConfigurationFactory;
 import io.bootique.config.jackson.JsonConfigurationFactory;
 import io.bootique.config.jackson.JsonConfigurationLoader;
 import io.bootique.config.jackson.PropertiesConfigurationLoader;
+import io.bootique.di.Injector;
 import io.bootique.jackson.JacksonService;
 import io.bootique.log.BootLogger;
 
 import javax.inject.Inject;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @since 3.0
@@ -44,19 +43,19 @@ public class AwsSecretsConfigurationLoader implements JsonConfigurationLoader {
 
     private final JacksonService jackson;
     private final BootLogger bootLogger;
-    private final Set<OrderedCredentialsProvider> credentialsProviders;
+    private final Injector injector;
     private final Map<String, AwsJsonTransformer> transformers;
 
     @Inject
     public AwsSecretsConfigurationLoader(
             JacksonService jackson,
             BootLogger bootLogger,
-            Set<OrderedCredentialsProvider> credentialsProviders,
+            Injector injector,
             Map<String, AwsJsonTransformer> transformers) {
 
         this.jackson = jackson;
         this.bootLogger = bootLogger;
-        this.credentialsProviders = credentialsProviders;
+        this.injector = injector;
         this.transformers = transformers;
     }
 
@@ -81,7 +80,7 @@ public class AwsSecretsConfigurationLoader implements JsonConfigurationLoader {
             return mutableInput;
         }
 
-        AwsConfig config = configFactory.config(AwsConfigFactory.class, "aws").createConfig(credentialsProviders);
+        AwsConfig config = configFactory.config(AwsConfigFactory.class, "aws").createConfig(injector);
         return secretsFactory.updateConfiguration(mutableInput, config, jsonMapper, transformers, bootLogger);
     }
 }

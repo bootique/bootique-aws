@@ -20,13 +20,12 @@
 package io.bootique.aws2;
 
 import io.bootique.ConfigModule;
-import io.bootique.aws2.credentials.OrderedCredentialsProvider;
 import io.bootique.config.ConfigurationFactory;
 import io.bootique.di.Binder;
+import io.bootique.di.Injector;
 import io.bootique.di.Provides;
 
 import javax.inject.Singleton;
-import java.util.Set;
 
 public class AwsModule extends ConfigModule {
 
@@ -41,7 +40,7 @@ public class AwsModule extends ConfigModule {
 
     @Provides
     @Singleton
-    AwsConfig provideConfig(ConfigurationFactory configFactory, Set<OrderedCredentialsProvider> credentialsProviders) {
-        return config(AwsConfigFactory.class, configFactory).createConfig(credentialsProviders);
+    AwsConfig provideConfig(ConfigurationFactory configFactory, Injector injector) {
+        return config(AwsConfigFactory.class, configFactory).createConfig(injector);
     }
 }

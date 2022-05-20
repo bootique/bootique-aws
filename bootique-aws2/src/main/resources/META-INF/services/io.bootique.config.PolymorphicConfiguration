@@ -1,0 +1,3 @@
+io.bootique.aws2.AwsConfigFactory
+io.bootique.aws2.profile.ProfileConfigFactory
+io.bootique.aws2.credentials.CredentialsConfigFactory

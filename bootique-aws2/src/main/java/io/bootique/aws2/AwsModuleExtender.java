@@ -88,6 +88,12 @@ public class AwsModuleExtender extends ModuleExtender<AwsModuleExtender> {
         return addCredentialsProvider(EnvironmentVariableCredentialsProvider.create(), order);
     }
 
+    /**
+     * Registers a credentials provider based on local AWS profiles. Note that profile provider can be created via
+     * configuration as well, allowing to specify the name of the profile.
+     *
+     * @see io.bootique.aws2.profile.ProfileConfigFactory
+     */
     public AwsModuleExtender addProfileCredentialsProvider(int order) {
         return addCredentialsProvider(ProfileCredentialsProvider.create(), order);
     }
