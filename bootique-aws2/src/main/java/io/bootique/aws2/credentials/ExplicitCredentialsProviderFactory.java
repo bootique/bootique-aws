@@ -22,28 +22,32 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
 import io.bootique.di.Injector;
-import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.*;
 
 /**
  * @since 3.0
  */
-@JsonTypeName("access-and-secret-key")
-@BQConfig("Configures credentials from access key and secret key set in this config. " +
-        "If none are specified, looks for DI-provided credentials providers.")
-public class AccessAndSecreteKeyCredentialsProviderFactory implements AwsCredentialsProviderFactory {
+@JsonTypeName("explicit")
+@BQConfig("Configures 'access key', 'secret key' and an optional 'session token' that serve as credentials to access AWS services.")
+public class ExplicitCredentialsProviderFactory implements AwsCredentialsProviderFactory {
 
     private String accessKey;
     private String secretKey;
+    private String sessionToken;
 
-    @BQConfigProperty("Sets AWS account credentials 'accessKey'")
+    @BQConfigProperty("Sets AWS access key credential")
     public void setAccessKey(String accessKey) {
         this.accessKey = accessKey;
     }
 
-    @BQConfigProperty("AWS account credentials 'secretKey'")
+    @BQConfigProperty("AWS secret key credential")
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
+    }
+
+    @BQConfigProperty("AWS session token credential. It is optional, and is only used with 'temporary' credentials")
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
     }
 
     @Override
@@ -57,6 +61,10 @@ public class AccessAndSecreteKeyCredentialsProviderFactory implements AwsCredent
             throw new NullPointerException("'secretKey' is not set");
         }
 
-        return StaticCredentialsProvider.create(new BasicAwsCredentials(accessKey, secretKey));
+        AwsCredentials credentials = sessionToken != null
+                ? AwsSessionCredentials.create(accessKey, secretKey, sessionToken)
+                : AwsBasicCredentials.create(accessKey, secretKey);
+
+        return StaticCredentialsProvider.create(credentials);
     }
 }

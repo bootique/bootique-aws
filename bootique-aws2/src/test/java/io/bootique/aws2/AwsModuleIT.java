@@ -19,16 +19,12 @@
 
 package io.bootique.aws2;
 
-import io.bootique.aws2.credentials.BasicAwsCredentials;
 import io.bootique.junit5.BQTest;
 import io.bootique.junit5.BQTestFactory;
 import io.bootique.junit5.BQTestTool;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import software.amazon.awssdk.auth.credentials.AwsCredentials;
-import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
-import software.amazon.awssdk.auth.credentials.AwsCredentialsProviderChain;
-import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,7 +36,7 @@ public class AwsModuleIT {
 
     @Test
     @DisplayName("Credentials provider based on BQ config with access and secret keys")
-    public void testAwsConfig_AccessAndSecretKeyCredentialsProvider() {
+    public void testAwsConfig_ExplicitCredentialsProvider() {
         AwsConfig config = testFactory
                 .app()
                 .autoLoadModules()
@@ -51,9 +47,30 @@ public class AwsModuleIT {
 
         AwsCredentials credentials = config.getCredentialsProvider().resolveCredentials();
 
-        assertNotNull(credentials);
+        assertTrue(credentials instanceof AwsBasicCredentials);
         assertEquals("xyz", credentials.accessKeyId());
         assertEquals("abc", credentials.secretAccessKey());
+
+    }
+
+    @Test
+    @DisplayName("Credentials provider based on BQ config with access and secret keys and session token")
+    public void testAwsConfig_ExplicitCredentialsProvider_SessionToken() {
+        AwsConfig config = testFactory
+                .app()
+                .autoLoadModules()
+                .property("bq.aws.credentials.accessKey", "xyz")
+                .property("bq.aws.credentials.secretKey", "abc")
+                .property("bq.aws.credentials.sessionToken", "123")
+                .createRuntime()
+                .getInstance(AwsConfig.class);
+
+        AwsCredentials credentials = config.getCredentialsProvider().resolveCredentials();
+
+        assertTrue(credentials instanceof AwsSessionCredentials);
+        assertEquals("xyz", credentials.accessKeyId());
+        assertEquals("abc", credentials.secretAccessKey());
+        assertEquals("123", ((AwsSessionCredentials) credentials).sessionToken());
     }
 
     @Test
@@ -140,7 +157,7 @@ public class AwsModuleIT {
 
         @Override
         public AwsCredentials resolveCredentials() {
-            return new BasicAwsCredentials(accessKey, secretKey);
+            return AwsBasicCredentials.create(accessKey, secretKey);
         }
     }
 }

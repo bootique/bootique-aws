@@ -25,7 +25,7 @@ import io.bootique.config.PolymorphicConfiguration;
 import io.bootique.di.Injector;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = AccessAndSecreteKeyCredentialsProviderFactory.class)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = ExplicitCredentialsProviderFactory.class)
 @BQConfig
 public interface AwsCredentialsProviderFactory extends PolymorphicConfiguration {
 

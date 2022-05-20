@@ -22,7 +22,6 @@ import com.zaxxer.hikari.HikariConfig;
 import io.bootique.BQCoreModule;
 import io.bootique.BQRuntime;
 import io.bootique.Bootique;
-import io.bootique.aws2.credentials.BasicAwsCredentials;
 import io.bootique.config.ConfigurationFactory;
 import io.bootique.jdbc.hikaricp.HikariCPManagedDataSourceFactory;
 import io.bootique.junit5.BQApp;
@@ -33,6 +32,7 @@ import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
@@ -61,7 +61,7 @@ public class RDSToHikariDataSourceTransformerIT {
                 "\"dbname\":\"mydb\"}";
 
         StaticCredentialsProvider credentialsProvider = StaticCredentialsProvider.create(
-                new BasicAwsCredentials(localstack.getAccessKey(), localstack.getSecretKey()));
+                AwsBasicCredentials.create(localstack.getAccessKey(), localstack.getSecretKey()));
 
         SecretsManagerClient.builder()
                 .credentialsProvider(credentialsProvider)
