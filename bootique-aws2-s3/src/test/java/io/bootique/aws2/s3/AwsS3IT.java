@@ -55,8 +55,8 @@ public class AwsS3IT {
     @BQApp(skipRun = true)
     final BQRuntime app = Bootique.app()
             .autoLoadModules()
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.accessKey", localstack.getAccessKey()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.secretKey", localstack.getSecretKey()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.credentials.accessKey", localstack.getAccessKey()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.credentials.secretKey", localstack.getSecretKey()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.defaultRegion", localstack.getRegion()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.awss3.endpointOverride", localstack.getEndpointOverride(LocalStackContainer.Service.S3).toString()))
             .createRuntime();

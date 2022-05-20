@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProviderChain;
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,13 +39,13 @@ public class AwsModuleIT {
     final BQTestFactory testFactory = new BQTestFactory();
 
     @Test
-    @DisplayName("Credentials provider based on BQ config")
-    public void testAwsConfig_BootiqueCredentialsProvider() {
+    @DisplayName("Credentials provider based on BQ config with access and secret keys")
+    public void testAwsConfig_AccessAndSecretKeyCredentialsProvider() {
         AwsConfig config = testFactory
                 .app()
                 .autoLoadModules()
-                .property("bq.aws.accessKey", "xyz")
-                .property("bq.aws.secretKey", "abc")
+                .property("bq.aws.credentials.accessKey", "xyz")
+                .property("bq.aws.credentials.secretKey", "abc")
                 .createRuntime()
                 .getInstance(AwsConfig.class);
 
@@ -56,8 +57,22 @@ public class AwsModuleIT {
     }
 
     @Test
+    @DisplayName("Credentials provider based on BQ config with profile")
+    public void testAwsConfig_ProfileCredentialsProvider() {
+        AwsConfig config = testFactory
+                .app()
+                .autoLoadModules()
+                .property("bq.aws.credentials.type", "profile")
+                .property("bq.aws.credentials.profile", "some_profile")
+                .createRuntime()
+                .getInstance(AwsConfig.class);
+
+        assertTrue(config.getCredentialsProvider() instanceof ProfileCredentialsProvider);
+    }
+
+    @Test
     @DisplayName("When no BQ credentials configured, alt provider must take over")
-    public void testAwsConfig_AltCredentialsProvider() {
+    public void testAwsConfig_DICredentialsProvider() {
         AwsConfig config = testFactory
                 .app()
                 .autoLoadModules()
@@ -75,7 +90,7 @@ public class AwsModuleIT {
 
     @Test
     @DisplayName("When no BQ credentials configured, alt provider must take over")
-    public void testAwsConfig_AltCredentialsProvider_Ordering() {
+    public void testAwsConfig_DICredentialsProvider_Ordering() {
         AwsConfig config = testFactory
                 .app()
                 .autoLoadModules()
@@ -96,12 +111,12 @@ public class AwsModuleIT {
 
     @Test
     @DisplayName("When BQ credentials are present, alt provider must be ignored")
-    public void testAwsConfig_AltCredentialsProvider_BqProviderWins() {
+    public void testAwsConfig_DICredentialsProvider_ConfigProviderWins() {
         AwsConfig config = testFactory
                 .app()
                 .autoLoadModules()
-                .property("bq.aws.accessKey", "xyz")
-                .property("bq.aws.secretKey", "abc")
+                .property("bq.aws.credentials.accessKey", "xyz")
+                .property("bq.aws.credentials.secretKey", "abc")
                 .module(b -> AwsModule.extend(b).addCredentialsProvider(new TestCredentialsProvider("tcpa", "tcps"), 5))
                 .createRuntime()
                 .getInstance(AwsConfig.class);

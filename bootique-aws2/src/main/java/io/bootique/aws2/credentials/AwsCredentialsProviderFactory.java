@@ -17,20 +17,17 @@
  * under the License.
  */
 
-package io.bootique.aws2;
+package io.bootique.aws2.credentials;
 
-import io.bootique.junit5.BQModuleProviderChecker;
-import org.junit.jupiter.api.Test;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.bootique.annotation.BQConfig;
+import io.bootique.config.PolymorphicConfiguration;
+import io.bootique.di.Injector;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 
-public class AwsModuleProviderTest {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = AccessAndSecreteKeyCredentialsProviderFactory.class)
+@BQConfig
+public interface AwsCredentialsProviderFactory extends PolymorphicConfiguration {
 
-    @Test
-    public void testAutoLoading() {
-        BQModuleProviderChecker.testAutoLoadable(AwsModuleProvider.class);
-    }
-
-    @Test
-    public void testConfigLoad() {
-        BQModuleProviderChecker.testMetadata(AwsModuleProvider.class);
-    }
+    AwsCredentialsProvider create(Injector injector);
 }

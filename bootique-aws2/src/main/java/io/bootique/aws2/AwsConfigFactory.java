@@ -19,21 +19,20 @@
 
 package io.bootique.aws2;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
-import io.bootique.aws2.credentials.CredentialsConfigFactory;
-import io.bootique.config.PolymorphicConfiguration;
+import io.bootique.aws2.credentials.AwsCredentialsProviderFactory;
+import io.bootique.aws2.credentials.CredentialsProviderChainFactory;
 import io.bootique.di.Injector;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = CredentialsConfigFactory.class)
 @BQConfig
-public abstract class AwsConfigFactory implements PolymorphicConfiguration {
+public class AwsConfigFactory {
 
     private String defaultRegion;
+    private AwsCredentialsProviderFactory credentials;
 
     @BQConfigProperty("Optional default region to use for AWS calls. Ignored if 'serviceEndpoint' " +
             "is set (in which case 'signingRegion' property is used to mirror AWS conventions")
@@ -41,11 +40,23 @@ public abstract class AwsConfigFactory implements PolymorphicConfiguration {
         this.defaultRegion = defaultRegion;
     }
 
+    @BQConfigProperty
+    public void setCredentials(AwsCredentialsProviderFactory credentials) {
+        this.credentials = credentials;
+    }
+
     public AwsConfig createConfig(Injector injector) {
         return new AwsConfig(createDefaultRegion(), createCredentialsProvider(injector));
     }
 
-    protected abstract AwsCredentialsProvider createCredentialsProvider(Injector injector);
+    protected AwsCredentialsProvider createCredentialsProvider(Injector injector) {
+
+        AwsCredentialsProviderFactory factory = this.credentials != null
+                ? this.credentials
+                : new CredentialsProviderChainFactory();
+
+        return factory.create(injector);
+    }
 
     protected Region createDefaultRegion() {
         return defaultRegion != null ? Region.of(defaultRegion) : null;

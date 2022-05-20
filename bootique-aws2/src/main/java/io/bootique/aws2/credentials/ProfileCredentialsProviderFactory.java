@@ -16,12 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package io.bootique.aws2.profile;
+package io.bootique.aws2.credentials;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
-import io.bootique.aws2.AwsConfigFactory;
 import io.bootique.di.Injector;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
@@ -32,7 +31,7 @@ import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 @JsonTypeName("profile")
 @BQConfig("Configures credentials from the AWS profile stored in ~/.aws/credentials. " +
         "If no profile name is specified, looks for the profile with the name 'default'.")
-public class ProfileConfigFactory extends AwsConfigFactory {
+public class ProfileCredentialsProviderFactory implements AwsCredentialsProviderFactory {
 
     private static final String DEFAULT_PROFILE_NAME = "default";
 
@@ -44,7 +43,7 @@ public class ProfileConfigFactory extends AwsConfigFactory {
     }
 
     @Override
-    protected AwsCredentialsProvider createCredentialsProvider(Injector injector) {
+    public AwsCredentialsProvider create(Injector injector) {
         String profile = this.profile != null ? this.profile : DEFAULT_PROFILE_NAME;
         return ProfileCredentialsProvider.create(profile);
     }

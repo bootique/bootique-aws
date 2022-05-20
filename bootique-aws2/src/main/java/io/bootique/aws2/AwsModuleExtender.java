@@ -20,6 +20,7 @@ package io.bootique.aws2;
 
 import io.bootique.ModuleExtender;
 import io.bootique.aws2.credentials.OrderedCredentialsProvider;
+import io.bootique.aws2.credentials.ProfileCredentialsProviderFactory;
 import io.bootique.di.Binder;
 import io.bootique.di.SetBuilder;
 import software.amazon.awssdk.auth.credentials.*;
@@ -92,7 +93,7 @@ public class AwsModuleExtender extends ModuleExtender<AwsModuleExtender> {
      * Registers a credentials provider based on local AWS profiles. Note that profile provider can be created via
      * configuration as well, allowing to specify the name of the profile.
      *
-     * @see io.bootique.aws2.profile.ProfileConfigFactory
+     * @see ProfileCredentialsProviderFactory
      */
     public AwsModuleExtender addProfileCredentialsProvider(int order) {
         return addCredentialsProvider(ProfileCredentialsProvider.create(), order);
