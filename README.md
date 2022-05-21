@@ -22,26 +22,34 @@
 
 # bootique-aws
 
-Helps to build Bootique apps that consume AWS services and/or are deployed in AWS environment (such as AWS Java Lambdas). 
-Integrates [Amazon Java SDK 1.x](https://aws.amazon.com/sdk-for-java/) libraries with Bootique and allows to seamlessly 
-merge data from AWS Secret Manager into Bootique app configuration.
+Helps to build Bootique apps that interact with AWS services and/or are deployed in the AWS environment (such as AWS 
+Java Lambdas). Integrates [Amazon Java SDK 2.x](https://aws.amazon.com/sdk-for-java/) libraries with Bootique and allows 
+to seamlessly merge data from AWS Secret Manager into Bootique app configuration.
+
+_Bootique 2 only supported AWS SDK 1.x, Bootique 3 introduced support for 2.x, and keeps 1.x in maintenance mode. All the
+new features are only added to the `*-aws2` modules. We strongly encourage the users to use `*-aws2`._
+
+_If Bootique doesn't yet provide a module for your favorite AWS service, you can still use `bootique-aws2` to configure
+credentials. And you can easily write your own. Refer to "bootique-aws2-s3" source code for a good example. And don't 
+forget to ping us, so we make it available in Bootique._
 
 ## Getting Started
 
 To be able to call any AWS services, an app will need to be provided with a set of AWS credentials and a default region. 
 This can be done either via a Bootique config or one of the standard AWS client library strategies. Let's look at the 
-first option - Bootique config. Start by importing `bootique-aws` dependency:
+first option - Bootique config. Start by importing `bootique-aws2` dependency:
 ```xml
 <dependency>
 	<groupId>io.bootique.aws</groupId>
-	<artifactId>bootique-aws</artifactId>
+	<artifactId>bootique-aws2</artifactId>
 </dependency>
 ```
 Generate access credentials in the AWS console, and configure the app similar to this:
 ```yaml
 aws:
-  accessKey: AKINXC5IHNPO255OW4EW
-  secretKey: N8RX3nvEjlOfB3Fmp+KPVAV+4wbLSQCUL9+tkEA+
+  credentials: 
+    accessKey: AKINXC5IHNPO255OW4EW
+    secretKey: N8RX3nvEjlOfB3Fmp+KPVAV+4wbLSQCUL9+tkEA+
   defaultRegion: us-east-2
 ```
 To use a specific AWS service, you will need to import a corresponding module, that will create an injectable
@@ -50,23 +58,20 @@ this:
 ```xml
 <dependency>
 	<groupId>io.bootique.aws</groupId>
-	<artifactId>bootique-aws-s3</artifactId>
+	<artifactId>bootique-aws2-s3</artifactId>
 </dependency>
 ```
 
 ```java
 @Inject
-private AmazonS3 s3Client;
+private S3Client s3Client;
 ```
 
-_If Bootique doesn't yet provide a module to call your favorite AWS service, you can easily write your own.
-Refer to "bootique-aws-s3" source code for a good example. And don't forget to ping us, so we make it available in Bootique._
-
 AWS client library has its own 
-[credential provider chain](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html) that attempts
-to load credentials from various sources (env vars, system properties, profile files, etc.). It is disabled by default
-in Bootique to avoid unexpected interactions between the app and the environment (e.g. a misconfigured unit test 
-messing up a production cluster). But it can be turned on explicitly as follows:
+[credential provider chain](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html) that 
+attempts to load credentials from various sources (env vars, system properties, profile files, etc.). It is disabled 
+by default in Bootique to avoid unexpected interactions between the app and the environment (e.g. a misconfigured unit 
+test messing up a production cluster). But it can be turned on explicitly, either as a whole, or piecemeal:
 
 ```java
 // turn on the entire default provider chain
@@ -80,7 +85,7 @@ AwsModule.extend(binder)
         .addProfileCredentialsProvider(2);
 ```
 Note that Bootique configuration will still take precedence over these providers, and only if the configuration is
-missing, the providers would be invoked.
+absent, the providers would be invoked.
 
 ## AWS EC2 and ECS
 
@@ -118,11 +123,7 @@ Since Lambda environment already includes credentials to access the rest of AWS 
 explicit `accessKey` / `secretKey` configuration. Instead, add an extra line to add a Lambda-friendly credentials 
 provider:
 ```java
-private static BQRuntime runtime = Bootique.app()
-    .autoLoadModules()
-     // this will pick up credentials from the environment vars
-    .module(b -> AwsModule.extend(b).addLambdaCredentialsProvider())
-    .createRuntime();
+AwsModule.extend(b).addLambdaCredentialsProvider());
 ```
 
 ## AWS Secret Manager as a Source of App Configuration
@@ -135,7 +136,7 @@ with the Secrets Manager you will need the following dependency:
 ```xml
 <dependency>
 	<groupId>io.bootique.aws</groupId>
-	<artifactId>bootique-aws-secrets</artifactId>
+	<artifactId>bootique-aws2-secrets</artifactId>
 </dependency>
 ```
 And then you'd list any secrets that should be included in the app configuration:
