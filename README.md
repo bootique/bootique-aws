@@ -37,7 +37,7 @@ The main challenge would be to upgrade the use of AWS API, which is significantl
 Bootique perspective, there's a difference in credentials configuration structure. Instead of `aws.accessKey` and 
 `aws.secretKey`, there are `aws.credentials.accessKey` and `aws.credentials.secretKey` paths.
 
-### What if I need to work with XYZ AWS service? 
+### What if I need to work with XYZ AWS service, and there is no module for it?
 If Bootique doesn't yet provide a module for your favorite AWS service, you should still use `bootique-aws2` to configure
 service credentials. And you can easily write your own integration module. Refer to "bootique-aws2-s3" source code for 
 a good example. Also you can ping us via GitHub or the forum, so we make it available in Bootique.
