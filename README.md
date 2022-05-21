@@ -24,14 +24,23 @@
 
 Helps to build Bootique apps that interact with AWS services and/or are deployed in the AWS environment (such as AWS 
 Java Lambdas). Integrates [Amazon Java SDK 2.x](https://aws.amazon.com/sdk-for-java/) libraries with Bootique and allows 
-to seamlessly merge data from AWS Secret Manager into Bootique app configuration.
+to seamlessly merge data from AWS Secrets Manager into Bootique app configuration.
 
-_Bootique 2 only supported AWS SDK 1.x, Bootique 3 introduced support for 2.x, and keeps 1.x in maintenance mode. All the
-new features are only added to the `*-aws2` modules. We strongly encourage the users to use `*-aws2`._
+## Quick FAQ
+### What AWS SDK Version does Bootique support?
+Bootique 2 only supports AWS SDK 1.x. Bootique 3 supports 2.x, and keeps 1.x in maintenance mode. 
+All the new features are only added to the `*-aws2` modules. We strongly encourage the users to use `*-aws2`.
 
-_If Bootique doesn't yet provide a module for your favorite AWS service, you can still use `bootique-aws2` to configure
-credentials. And you can easily write your own. Refer to "bootique-aws2-s3" source code for a good example. And don't 
-forget to ping us, so we make it available in Bootique._
+### I already have an app using Bootique with AWS SDK 1.x. How do I upgrade?
+The main challenge would be to upgrade the use of AWS API, which is significantly different. You can start by reading
+[AWS Docs](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/migration.html) on this subject. From the
+Bootique perspective, there's a difference in credentials configuration structure. Instead of `aws.accessKey` and 
+`aws.secretKey`, there are `aws.credentials.accessKey` and `aws.credentials.secretKey` paths.
+
+### What if I need to work with XYZ AWS service? 
+If Bootique doesn't yet provide a module for your favorite AWS service, you should still use `bootique-aws2` to configure
+service credentials. And you can easily write your own integration module. Refer to "bootique-aws2-s3" source code for 
+a good example. Also you can ping us via GitHub or the forum, so we make it available in Bootique.
 
 ## Getting Started
 
@@ -50,6 +59,8 @@ aws:
   credentials: 
     accessKey: AKINXC5IHNPO255OW4EW
     secretKey: N8RX3nvEjlOfB3Fmp+KPVAV+4wbLSQCUL9+tkEA+
+    # Used for "temporary" credentials
+    # sessionToken: ....
   defaultRegion: us-east-2
 ```
 To use a specific AWS service, you will need to import a corresponding module, that will create an injectable
