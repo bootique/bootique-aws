@@ -78,16 +78,17 @@ this:
 private S3Client s3Client;
 ```
 
-AWS client library has its own 
+Bootique configuration support explicit credentials (including a "temporary" variety), and reading configuration
+profiles. At the same time, AWS library has its own 
 [credential provider chain](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html) that 
-attempts to load credentials from various sources (env vars, system properties, profile files, etc.). It is disabled 
-by default in Bootique to avoid unexpected interactions between the app and the environment (e.g. a misconfigured unit 
-test messing up a production cluster). But it can be turned on explicitly, either as a whole, or piecemeal:
-
+attempts to load credentials in turn from various sources (env vars, system properties, profile files, etc.). It is 
+disabled by default in Bootique to avoid unexpected interactions between the app and the environment. But it can be 
+turned on either all at once:
 ```java
 // turn on the entire default provider chain
 AwsModule.extend(binder).addAwsCredentialsProviderChain();
 ```
+or piecemeal:
 
 ```java
 // turn on one or more credential providers individually
