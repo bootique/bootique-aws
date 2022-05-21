@@ -20,7 +20,7 @@
 [![build test deploy](https://github.com/bootique/bootique-aws/actions/workflows/maven.yml/badge.svg)](https://github.com/bootique/bootique-aws/actions/workflows/maven.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/io.bootique.aws/bootique-aws.svg?colorB=brightgreen)](https://search.maven.org/artifact/io.bootique.aws/bootique-aws)
 
-# bootique-aws2
+# Bootique AWS
 
 Helps to build Bootique apps that interact with AWS services and/or are deployed in the AWS environment (such as AWS 
 Java Lambdas). Integrates [Amazon Java SDK 2.x](https://aws.amazon.com/sdk-for-java/) libraries with Bootique and allows 
