@@ -33,9 +33,8 @@ Bootique 2 supports AWS SDK `1.x`. Bootique 3 supports `2.x`, and `1.x` (in main
 
 ### I already have an app using Bootique with AWS SDK 1.x. How do I upgrade?
 The main challenge would be to upgrade the use of AWS API, which is significantly different. You can start by reading
-[AWS Docs on this subject](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/migration.html). From the
-Bootique perspective, there's a difference in credentials configuration structure. Instead of `aws.accessKey` and 
-`aws.secretKey`, there are `aws.credentials.accessKey` and `aws.credentials.secretKey` paths.
+[AWS Docs on this subject](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/migration.html). On Bootique
+side there are some differences in configuration and in what objects you inject. They are all [documented here](https://github.com/bootique/bootique-aws/issues/10).
 
 ### What if I need to work with XYZ AWS service, and there is no module for it?
 If Bootique doesn't yet provide a module for your favorite AWS service, you should still use `bootique-aws2` to configure
