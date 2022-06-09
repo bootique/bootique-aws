@@ -37,7 +37,7 @@ public class CredentialsProviderChainFactory implements AwsCredentialsProviderFa
         if (provider == null) {
             throw new IllegalStateException(
                     "No credentials providers available via injection, " +
-                            "and no explicit configuration was provided (profile or access/secret key");
+                            "and no explicit configuration was provided (profile or access/secret key)");
         }
 
         return provider;
