@@ -16,24 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package io.bootique.aws2.junit5;
 
-package io.bootique.aws2.s3;
+import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.localstack.LocalStackContainer;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import io.bootique.annotation.BQConfig;
-import io.bootique.aws2.AwsConfig;
-import io.bootique.aws2.AwsServiceFactory;
-import io.bootique.config.PolymorphicConfiguration;
-import io.bootique.di.Injector;
-import software.amazon.awssdk.services.s3.S3Client;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@BQConfig
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = S3Factory.class)
-@JsonTypeName("default")
-public class S3Factory extends AwsServiceFactory implements PolymorphicConfiguration {
+public class AwsServiceTest {
 
-    public S3Client createS3(AwsConfig config, Injector injector) {
-        return configure(S3Client.builder(), config).build();
+    @Test
+    public void testMatchesTestcontainersServiceList() {
+        assertEquals(AwsService.values().length, LocalStackContainer.Service.values().length);
+        for(AwsService s : AwsService.values()) {
+            assertDoesNotThrow(() -> s.toLocalstackService());
+        }
     }
 }

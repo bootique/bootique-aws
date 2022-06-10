@@ -16,24 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package io.bootique.aws2.s3.junit5;
 
-package io.bootique.aws2.s3;
+import io.bootique.aws2.junit5.AwsService;
+import io.bootique.aws2.junit5.AwsTester;
+import io.bootique.junit5.BQTest;
+import io.bootique.junit5.BQTestScope;
+import io.bootique.junit5.BQTestTool;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import io.bootique.annotation.BQConfig;
-import io.bootique.aws2.AwsConfig;
-import io.bootique.aws2.AwsServiceFactory;
-import io.bootique.config.PolymorphicConfiguration;
-import io.bootique.di.Injector;
-import software.amazon.awssdk.services.s3.S3Client;
+@BQTest
+public abstract class BaseAwsTest {
 
-@BQConfig
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = S3Factory.class)
-@JsonTypeName("default")
-public class S3Factory extends AwsServiceFactory implements PolymorphicConfiguration {
+    @BQTestTool(BQTestScope.GLOBAL)
+    static final AwsTester aws = AwsTester.aws(AwsService.S3);
 
-    public S3Client createS3(AwsConfig config, Injector injector) {
-        return configure(S3Client.builder(), config).build();
-    }
 }

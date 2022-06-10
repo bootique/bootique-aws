@@ -16,23 +16,44 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package io.bootique.aws2.junit5;
 
-package io.bootique.aws2.s3;
+import org.testcontainers.containers.localstack.LocalStackContainer;
 
-import io.bootique.ConfigModule;
-import io.bootique.aws2.AwsConfig;
-import io.bootique.config.ConfigurationFactory;
-import io.bootique.di.Injector;
-import io.bootique.di.Provides;
-import software.amazon.awssdk.services.s3.S3Client;
+/**
+ * Lists AWS services that can be emulated in your tests.
+ *
+ * @since 3.0.M1
+ */
+public enum AwsService {
 
-import javax.inject.Singleton;
+    // Must match LocalStackContainer.Service enum. Will need to be updated  as we upgrade to newer TC with more
+    // services. Consistency is guaranteed via AwsServiceTest
 
-public class AwsS3Module extends ConfigModule {
+    API_GATEWAY,
+    EC2,
+    KINESIS,
+    DYNAMODB,
+    DYNAMODB_STREAMS,
+    S3,
+    FIREHOSE,
+    LAMBDA,
+    SNS,
+    SQS,
+    REDSHIFT,
+    SES,
+    ROUTE53,
+    CLOUDFORMATION,
+    CLOUDWATCH,
+    SSM,
+    SECRETSMANAGER,
+    STEPFUNCTIONS,
+    CLOUDWATCHLOGS,
+    STS,
+    IAM,
+    KMS;
 
-    @Provides
-    @Singleton
-    S3Client provideS3Client(ConfigurationFactory configFactory, AwsConfig config, Injector injector) {
-        return config(S3Factory.class, configFactory).createS3(config, injector);
+    public LocalStackContainer.Service toLocalstackService() {
+        return LocalStackContainer.Service.valueOf(name());
     }
 }
