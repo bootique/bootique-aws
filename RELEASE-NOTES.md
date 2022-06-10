@@ -3,6 +3,7 @@
 * #10 Integration with AWS Java SDK 2.x
 * #13 Support AWS client "profiles" in YAML config #13
 * #14 Temporary credentials with "sessionToken"
+* #15 AwsTester / S3Tester
 
 ## 2.0.B1
 
