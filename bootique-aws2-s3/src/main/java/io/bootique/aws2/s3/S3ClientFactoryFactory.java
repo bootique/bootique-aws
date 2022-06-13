@@ -22,18 +22,27 @@ package io.bootique.aws2.s3;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.bootique.annotation.BQConfig;
+import io.bootique.annotation.BQConfigProperty;
 import io.bootique.aws2.AwsConfig;
-import io.bootique.aws2.AwsServiceFactory;
 import io.bootique.config.PolymorphicConfiguration;
 import io.bootique.di.Injector;
-import software.amazon.awssdk.services.s3.S3Client;
+
+import java.net.URI;
 
 @BQConfig
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = S3Factory.class)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = S3ClientFactoryFactory.class)
 @JsonTypeName("default")
-public class S3Factory extends AwsServiceFactory implements PolymorphicConfiguration {
+public class S3ClientFactoryFactory implements PolymorphicConfiguration {
 
-    public S3Client createS3(AwsConfig config, Injector injector) {
-        return configure(S3Client.builder(), config).build();
+    private URI endpointOverride;
+
+    public S3ClientFactory create(AwsConfig config, Injector injector) {
+        return new S3ClientFactory(config, endpointOverride);
+    }
+
+    @BQConfigProperty("Specific service endpoint, overriding the default endpoint derived from the configuration region. Useful local tests.")
+    public S3ClientFactoryFactory setEndpointOverride(URI endpointOverride) {
+        this.endpointOverride = endpointOverride;
+        return this;
     }
 }

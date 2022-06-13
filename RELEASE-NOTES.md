@@ -1,6 +1,7 @@
 ## 3.0.M1
 
 * #10 Integration with AWS Java SDK 2.x
+* #11 Injectable S3Client factory
 * #13 Support AWS client "profiles" in YAML config #13
 * #14 Temporary credentials with "sessionToken"
 * #15 AwsTester / S3Tester

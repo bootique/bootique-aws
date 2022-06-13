@@ -22,6 +22,7 @@ import io.bootique.BQRuntime;
 import io.bootique.Bootique;
 import io.bootique.aws2.junit5.AwsService;
 import io.bootique.aws2.junit5.AwsTester;
+import io.bootique.aws2.s3.S3ClientFactory;
 import io.bootique.junit5.BQApp;
 import io.bootique.junit5.BQTest;
 import io.bootique.junit5.BQTestTool;
@@ -56,7 +57,7 @@ public class S3Tester_NoTestHierarchyIT {
 
     @Test
     public void testS3() throws IOException {
-        S3Client s3 = app.getInstance(S3Client.class);
+        S3Client s3 = app.getInstance(S3ClientFactory.class).newClient();
 
         s3.putObject(b -> b.bucket("bt1").key("b1k1"), RequestBody.fromBytes("b1v1".getBytes()));
         s3.putObject(b -> b.bucket("bt2").key("b2k1"), RequestBody.fromBytes("b2v1".getBytes()));

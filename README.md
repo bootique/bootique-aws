@@ -74,7 +74,7 @@ this:
 
 ```java
 @Inject
-private S3Client s3Client;
+private S3ClientFactory s3ClientFactory
 ```
 
 Bootique configuration support explicit credentials (including a "temporary" variety), and reading configuration

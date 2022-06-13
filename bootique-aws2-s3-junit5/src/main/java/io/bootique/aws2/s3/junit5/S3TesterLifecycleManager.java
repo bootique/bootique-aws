@@ -18,6 +18,7 @@
  */
 package io.bootique.aws2.s3.junit5;
 
+import io.bootique.aws2.s3.S3ClientFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -36,10 +37,10 @@ class S3TesterLifecycleManager {
 
     private final AtomicBoolean attachedToRuntime;
     private List<String> bucketNames;
-    private final List<Consumer<S3Client>> afterBucketsCreated;
-    private final List<Consumer<S3Client>> beforeEachTest;
+    private final List<Consumer<S3ClientFactory>> afterBucketsCreated;
+    private final List<Consumer<S3ClientFactory>> beforeEachTest;
 
-    private S3Client client;
+    private S3ClientFactory clientFactory;
     private boolean withinTestMethod;
 
     S3TesterLifecycleManager() {
@@ -54,7 +55,7 @@ class S3TesterLifecycleManager {
         this.withinTestMethod = true;
 
         if (isStarted()) {
-            beforeEachTest.forEach(c -> c.accept(client));
+            beforeEachTest.forEach(c -> c.accept(clientFactory));
         }
     }
 
@@ -62,19 +63,23 @@ class S3TesterLifecycleManager {
         this.withinTestMethod = false;
     }
 
-    void onS3ClientInit(S3Client client) {
+    void onS3ClientFactoryInit(S3ClientFactory clientFactory) {
         checkUnused();
-        this.client = client;
-        bucketNames.forEach(this::execCreateBucket);
-        afterBucketsCreated.forEach(c -> c.accept(client));
+        this.clientFactory = clientFactory;
+
+        if (!bucketNames.isEmpty()) {
+            S3Client client = clientFactory.newClient();
+            bucketNames.forEach(n -> execCreateBucket(client, n));
+        }
+        afterBucketsCreated.forEach(c -> c.accept(clientFactory));
 
         // run before callbacks that where skipped previously because the manager was not initialized
         if (withinTestMethod) {
-            beforeEachTest.forEach(c -> c.accept(client));
+            beforeEachTest.forEach(c -> c.accept(clientFactory));
         }
     }
 
-    private void execCreateBucket(String bucketName) {
+    private void execCreateBucket(S3Client client, String bucketName) {
         LOGGER.debug("Creating test bucket {}", bucketName);
         client.createBucket(b -> b.bucket(bucketName));
     }
@@ -85,16 +90,16 @@ class S3TesterLifecycleManager {
         }
     }
 
-    void runAfterBucketsCreated(Consumer<S3Client> callback) {
+    void runAfterBucketsCreated(Consumer<S3ClientFactory> callback) {
         afterBucketsCreated.add(callback);
     }
 
-    void runBeforeEachTest(Consumer<S3Client> callback) {
+    void runBeforeEachTest(Consumer<S3ClientFactory> callback) {
         beforeEachTest.add(callback);
     }
 
     private boolean isStarted() {
-        return client != null;
+        return clientFactory != null;
     }
 
     private void checkUnused() {

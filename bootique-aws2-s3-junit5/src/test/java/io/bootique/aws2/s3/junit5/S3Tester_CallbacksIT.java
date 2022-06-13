@@ -20,6 +20,7 @@ package io.bootique.aws2.s3.junit5;
 
 import io.bootique.BQRuntime;
 import io.bootique.Bootique;
+import io.bootique.aws2.s3.S3ClientFactory;
 import io.bootique.junit5.BQApp;
 import io.bootique.junit5.BQTest;
 import io.bootique.junit5.BQTestTool;
@@ -53,21 +54,21 @@ public class S3Tester_CallbacksIT extends BaseAwsTest {
             .module(s3.moduleWithTestS3())
             .createRuntime();
 
-    static void populateOnStart(S3Client client) {
-        client.putObject(
+    static void populateOnStart(S3ClientFactory factory) {
+        factory.newClient().putObject(
                 b -> b.bucket("bucket").key("onstart"),
                 RequestBody.fromBytes("onstart".getBytes()));
     }
 
-    static void populateBeforeMethod(S3Client client) {
-        client.putObject(
+    static void populateBeforeMethod(S3ClientFactory factory) {
+        factory.newClient().putObject(
                 b -> b.bucket("bucket").key("beforeMethod"),
                 RequestBody.fromBytes("beforeMethod".getBytes()));
     }
     @BeforeAll
     static void checkOnStart() throws IOException {
 
-        S3Client s3 = app.getInstance(S3Client.class);
+        S3Client s3 = app.getInstance(S3ClientFactory.class).newClient();
 
         Set<String> objects = s3.listObjects(b -> b.bucket("bucket"))
                 .contents().stream().map(S3Object::key).collect(Collectors.toSet());
@@ -80,7 +81,7 @@ public class S3Tester_CallbacksIT extends BaseAwsTest {
 
     @Test
     public void checkBeforeMethod() throws IOException {
-        S3Client s3 = app.getInstance(S3Client.class);
+        S3Client s3 = app.getInstance(S3ClientFactory.class).newClient();
 
         Set<String> objects = s3.listObjects(b -> b.bucket("bucket"))
                 .contents().stream().map(S3Object::key).collect(Collectors.toSet());

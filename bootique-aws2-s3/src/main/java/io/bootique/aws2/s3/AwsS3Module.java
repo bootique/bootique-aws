@@ -24,7 +24,6 @@ import io.bootique.aws2.AwsConfig;
 import io.bootique.config.ConfigurationFactory;
 import io.bootique.di.Injector;
 import io.bootique.di.Provides;
-import software.amazon.awssdk.services.s3.S3Client;
 
 import javax.inject.Singleton;
 
@@ -32,7 +31,7 @@ public class AwsS3Module extends ConfigModule {
 
     @Provides
     @Singleton
-    S3Client provideS3Client(ConfigurationFactory configFactory, AwsConfig config, Injector injector) {
-        return config(S3Factory.class, configFactory).createS3(config, injector);
+    S3ClientFactory provideS3ClientFactory(ConfigurationFactory configFactory, AwsConfig config, Injector injector) {
+        return config(S3ClientFactoryFactory.class, configFactory).create(config, injector);
     }
 }

@@ -1,1 +1,1 @@
-io.bootique.aws2.s3.S3Factory
+io.bootique.aws2.s3.S3ClientFactoryFactory

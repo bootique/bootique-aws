@@ -63,7 +63,7 @@ public class AwsS3IT {
 
     @Test
     public void testBucketOperations() throws IOException {
-        S3Client s3 = app.getInstance(S3Client.class);
+        S3Client s3 = app.getInstance(S3ClientFactory.class).newClient();
 
         // create bucket
         s3.createBucket(b -> b.bucket("test-bucket"));

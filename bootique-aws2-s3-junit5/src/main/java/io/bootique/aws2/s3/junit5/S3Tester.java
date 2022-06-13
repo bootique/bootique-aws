@@ -19,13 +19,13 @@
 package io.bootique.aws2.s3.junit5;
 
 import io.bootique.BQCoreModule;
+import io.bootique.aws2.s3.S3ClientFactory;
 import io.bootique.di.BQModule;
 import io.bootique.di.Binder;
 import io.bootique.junit5.BQTestScope;
 import io.bootique.junit5.scope.BQAfterMethodCallback;
 import io.bootique.junit5.scope.BQBeforeMethodCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import software.amazon.awssdk.services.s3.S3Client;
 
 import java.util.function.Consumer;
 
@@ -57,8 +57,8 @@ public class S3Tester implements BQBeforeMethodCallback, BQAfterMethodCallback {
         lifecycleManager.afterMethod();
     }
 
-    void onS3ClientInit(S3Client client) {
-        lifecycleManager.onS3ClientInit(client);
+    void onS3ClientFactoryInit(S3ClientFactory factory) {
+        lifecycleManager.onS3ClientFactoryInit(factory);
     }
 
     /**
@@ -75,12 +75,12 @@ public class S3Tester implements BQBeforeMethodCallback, BQAfterMethodCallback {
         return this;
     }
 
-    public S3Tester runAfterBucketsCreated(Consumer<S3Client> callback) {
+    public S3Tester runAfterBucketsCreated(Consumer<S3ClientFactory> callback) {
         lifecycleManager.runAfterBucketsCreated(callback);
         return this;
     }
 
-    public S3Tester runBeforeEachTest(Consumer<S3Client> callback) {
+    public S3Tester runBeforeEachTest(Consumer<S3ClientFactory> callback) {
         lifecycleManager.runBeforeEachTest(callback);
         return this;
     }
