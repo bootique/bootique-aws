@@ -18,6 +18,8 @@
  */
 package io.bootique.aws2.s3.junit5;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.s3.S3Client;
 
 import java.util.ArrayList;
@@ -29,6 +31,8 @@ import java.util.function.Consumer;
  * @since 3.0.M1
  */
 class S3TesterLifecycleManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(S3TesterLifecycleManager.class);
 
     private final AtomicBoolean attachedToRuntime;
     private List<String> bucketNames;
@@ -72,6 +76,7 @@ class S3TesterLifecycleManager {
 
     void createBuckets(String... bucketNames) {
         for (String n : bucketNames) {
+            LOGGER.debug("Creating test bucket {}", n);
             this.bucketNames.add(n);
         }
     }
