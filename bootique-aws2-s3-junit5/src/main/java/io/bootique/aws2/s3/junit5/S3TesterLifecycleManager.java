@@ -65,7 +65,7 @@ class S3TesterLifecycleManager {
     void onS3ClientInit(S3Client client) {
         checkUnused();
         this.client = client;
-        bucketNames.forEach(n -> client.createBucket(b -> b.bucket(n)));
+        bucketNames.forEach(this::execCreateBucket);
         afterBucketsCreated.forEach(c -> c.accept(client));
 
         // run before callbacks that where skipped previously because the manager was not initialized
@@ -74,9 +74,13 @@ class S3TesterLifecycleManager {
         }
     }
 
+    private void execCreateBucket(String bucketName) {
+        LOGGER.debug("Creating test bucket {}", bucketName);
+        client.createBucket(b -> b.bucket(bucketName));
+    }
+
     void createBuckets(String... bucketNames) {
         for (String n : bucketNames) {
-            LOGGER.debug("Creating test bucket {}", n);
             this.bucketNames.add(n);
         }
     }
