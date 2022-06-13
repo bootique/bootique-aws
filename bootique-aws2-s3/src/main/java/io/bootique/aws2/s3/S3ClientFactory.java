@@ -36,16 +36,29 @@ public class S3ClientFactory {
     private final AwsConfig config;
     private final URI endpointOverride;
 
+    // TODO: close the client on shutdown?
+    private volatile S3Client defaultClient;
+
     public S3ClientFactory(AwsConfig config, URI endpointOverride) {
         this.config = config;
         this.endpointOverride = endpointOverride;
     }
 
-    public S3Client newClient() {
-        return newBuilder().build();
+    public S3Client client() {
+
+        // can cache the client created with default settings
+        if (defaultClient == null) {
+            synchronized (this) {
+                if (defaultClient == null) {
+                    this.defaultClient = builder().build();
+                }
+            }
+        }
+
+        return defaultClient;
     }
 
-    public Builder newBuilder() {
+    public Builder builder() {
         return new Builder(config, endpointOverride);
     }
 

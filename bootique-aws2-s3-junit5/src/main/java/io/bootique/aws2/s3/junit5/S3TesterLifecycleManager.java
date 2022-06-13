@@ -68,7 +68,7 @@ class S3TesterLifecycleManager {
         this.clientFactory = clientFactory;
 
         if (!bucketNames.isEmpty()) {
-            S3Client client = clientFactory.newClient();
+            S3Client client = clientFactory.client();
             bucketNames.forEach(n -> execCreateBucket(client, n));
         }
         afterBucketsCreated.forEach(c -> c.accept(clientFactory));

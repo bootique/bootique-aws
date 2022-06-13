@@ -55,20 +55,20 @@ public class S3Tester_CallbacksIT extends BaseAwsTest {
             .createRuntime();
 
     static void populateOnStart(S3ClientFactory factory) {
-        factory.newClient().putObject(
+        factory.client().putObject(
                 b -> b.bucket("bucket").key("onstart"),
                 RequestBody.fromBytes("onstart".getBytes()));
     }
 
     static void populateBeforeMethod(S3ClientFactory factory) {
-        factory.newClient().putObject(
+        factory.client().putObject(
                 b -> b.bucket("bucket").key("beforeMethod"),
                 RequestBody.fromBytes("beforeMethod".getBytes()));
     }
     @BeforeAll
     static void checkOnStart() throws IOException {
 
-        S3Client s3 = app.getInstance(S3ClientFactory.class).newClient();
+        S3Client s3 = app.getInstance(S3ClientFactory.class).client();
 
         Set<String> objects = s3.listObjects(b -> b.bucket("bucket"))
                 .contents().stream().map(S3Object::key).collect(Collectors.toSet());
@@ -81,7 +81,7 @@ public class S3Tester_CallbacksIT extends BaseAwsTest {
 
     @Test
     public void checkBeforeMethod() throws IOException {
-        S3Client s3 = app.getInstance(S3ClientFactory.class).newClient();
+        S3Client s3 = app.getInstance(S3ClientFactory.class).client();
 
         Set<String> objects = s3.listObjects(b -> b.bucket("bucket"))
                 .contents().stream().map(S3Object::key).collect(Collectors.toSet());

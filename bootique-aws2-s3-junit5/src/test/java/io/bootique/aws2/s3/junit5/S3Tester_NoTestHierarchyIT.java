@@ -57,7 +57,7 @@ public class S3Tester_NoTestHierarchyIT {
 
     @Test
     public void testS3() throws IOException {
-        S3Client s3 = app.getInstance(S3ClientFactory.class).newClient();
+        S3Client s3 = app.getInstance(S3ClientFactory.class).client();
 
         s3.putObject(b -> b.bucket("bt1").key("b1k1"), RequestBody.fromBytes("b1v1".getBytes()));
         s3.putObject(b -> b.bucket("bt2").key("b2k1"), RequestBody.fromBytes("b2v1".getBytes()));
