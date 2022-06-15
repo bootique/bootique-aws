@@ -41,7 +41,7 @@
         <bootique.version>${project.version}</bootique.version>
         <aws1.sdk.version>1.11.913</aws1.sdk.version>
         <aws2.sdk.version>2.17.60</aws2.sdk.version>
-        <testcontainers.version>1.16.0</testcontainers.version>
+        <testcontainers.version>1.17.2</testcontainers.version>
     </properties>
 
 	<modules>
