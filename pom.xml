@@ -18,13 +18,14 @@
   under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.bootique.modules.parent</groupId>
         <artifactId>bootique-modules-parent</artifactId>
-        <version>3.0.13</version>
+        <version>3.0.14</version>
     </parent>
 
     <groupId>io.bootique.aws</groupId>
@@ -43,9 +44,9 @@
         <aws2.sdk.version>2.17.60</aws2.sdk.version>
     </properties>
 
-	<modules>
-		<module>bootique-aws</module>
-		<module>bootique-aws-s3</module>
+    <modules>
+        <module>bootique-aws</module>
+        <module>bootique-aws-s3</module>
         <module>bootique-aws-secrets</module>
 
         <module>bootique-aws2</module>
@@ -63,6 +64,17 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+
             <!-- 2.x dependencies -->
             <dependency>
                 <groupId>software.amazon.awssdk</groupId>
@@ -129,6 +141,11 @@
                         <artifactId>junit-jupiter-api</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
