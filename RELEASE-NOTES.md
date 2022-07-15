@@ -5,6 +5,7 @@
 * #13 Support AWS client "profiles" in YAML config #13
 * #14 Temporary credentials with "sessionToken"
 * #15 AwsTester / S3Tester
+* #16 Bump aws-java-sdk-s3 from 1.11.913 to 1.12.261
 
 ## 2.0.B1
 
