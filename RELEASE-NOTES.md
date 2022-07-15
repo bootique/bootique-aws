@@ -1,3 +1,7 @@
+## 2.0.2
+
+* #17 2.x Bump aws-java-sdk-s3 from 1.11.913 to 1.12.261
+
 ## 2.0.B1
 
 * #5 Integrate support for AWS Secrets Manager
