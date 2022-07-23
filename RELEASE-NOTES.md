@@ -6,6 +6,7 @@
 * #14 Temporary credentials with "sessionToken"
 * #15 AwsTester / S3Tester
 * #16 Bump aws-java-sdk-s3 from 1.11.913 to 1.12.261
+* #18 Upgrade SDK versions to 1.12.267 and 2.17.238
 
 ## 2.0.B1
 
