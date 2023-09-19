@@ -46,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @BQTest
 public class AwsS3IT {
 
-    static DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:0.11.3");
+    static DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:2.2.0");
 
     @Container
     static final LocalStackContainer localstack = new LocalStackContainer(localstackImage)

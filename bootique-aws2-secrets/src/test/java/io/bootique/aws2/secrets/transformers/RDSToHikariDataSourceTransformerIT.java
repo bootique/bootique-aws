@@ -44,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class RDSToHikariDataSourceTransformerIT {
 
     // TODO: unfortunately can't reuse Localstack between the tests, as Testcontainers doesn't provide a GLOBAL scope
-    private static final DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:0.11.3");
+    private static final DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:2.2.0");
 
     @Container
     static final LocalStackContainer localstack = new LocalStackContainer(localstackImage)
@@ -68,7 +68,7 @@ public class RDSToHikariDataSourceTransformerIT {
                 .region(Region.of(localstack.getRegion()))
                 .endpointOverride(localstack.getEndpointOverride(LocalStackContainer.Service.SECRETSMANAGER))
                 .build()
-                .putSecretValue(b -> b.secretString(rdsSecret).secretId("rdsSecret"));
+                .createSecret(b -> b.secretString(rdsSecret).name("rdsSecret"));
     }
 
     @BQApp(skipRun = true)

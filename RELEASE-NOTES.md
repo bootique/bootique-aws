@@ -1,6 +1,7 @@
 ## 3.0.M2
 
 * #21 Upgrade AWS 2 lib to 2.20.150
+* #22 Upgrade Localstack container to 2.2.0
 
 ## 3.0.M1
 

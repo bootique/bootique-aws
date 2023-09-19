@@ -34,7 +34,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
-import software.amazon.awssdk.services.secretsmanager.model.PutSecretValueResponse;
+import software.amazon.awssdk.services.secretsmanager.model.CreateSecretResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -43,11 +43,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @BQTest
 public class AwsSecretsConfigurationLoaderIT {
 
-    private static PutSecretValueResponse SECRET1;
-    private static PutSecretValueResponse SECRET2;
+    private static CreateSecretResponse SECRET1;
+    private static CreateSecretResponse SECRET2;
 
     // TODO: unfortunately can't reuse Localstack between the tests, as Testcontainers doesn't provide a GLOBAL scope
-    private static final DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:0.11.3");
+    private static final DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:2.2.0");
 
     @Container
     static final LocalStackContainer localstack = new LocalStackContainer(localstackImage)
@@ -68,10 +68,10 @@ public class AwsSecretsConfigurationLoaderIT {
                 .endpointOverride(localstack.getEndpointOverride(LocalStackContainer.Service.SECRETSMANAGER))
                 .build();
 
-        SECRET1 = sm.putSecretValue(b -> b.secretString(secret1).secretId("secret1"));
+        SECRET1 = sm.createSecret(b -> b.secretString(secret1).name("secret1"));
         assertNotNull(SECRET1);
 
-        SECRET2 = sm.putSecretValue(b -> b.secretString(secret2).secretId("secret2"));
+        SECRET2 = sm.createSecret(b -> b.secretString(secret2).name("secret2"));
         assertNotNull(SECRET2);
     }
 

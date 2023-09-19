@@ -22,7 +22,7 @@ import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
-import com.amazonaws.services.secretsmanager.model.PutSecretValueRequest;
+import com.amazonaws.services.secretsmanager.model.CreateSecretRequest;
 import com.zaxxer.hikari.HikariConfig;
 import io.bootique.BQCoreModule;
 import io.bootique.BQRuntime;
@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class RDSToHikariDataSourceTransformerIT {
 
     // TODO: unfortunately can't reuse Localstack between the tests, as Testcontainers doesn't provide a GLOBAL scope
-    private static final DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:0.11.3");
+    private static final DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:2.2.0");
 
     @Container
     static final LocalStackContainer localstack = new LocalStackContainer(localstackImage)
@@ -68,7 +68,7 @@ public class RDSToHikariDataSourceTransformerIT {
                 .withCredentials(credentialsProvider)
                 .withEndpointConfiguration(localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER))
                 .build()
-                .putSecretValue(new PutSecretValueRequest().withSecretString(rdsSecret).withSecretId("rdsSecret"));
+                .createSecret(new CreateSecretRequest().withSecretString(rdsSecret).withName("rdsSecret"));
     }
 
     @BQApp(skipRun = true)

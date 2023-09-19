@@ -19,6 +19,7 @@
 package io.bootique.aws.secrets;
 
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
+import com.amazonaws.services.secretsmanager.model.CreateSecretRequest;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
 import com.amazonaws.services.secretsmanager.model.PutSecretValueRequest;
 import io.bootique.BQCoreModule;
@@ -41,7 +42,7 @@ public class AwsSecretsManagerIT {
 
     // TODO: unfortunately can't reuse Localstack between the tests, as Testcontainers doesn't provide a GLOBAL scope
 
-    static DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:0.11.3");
+    static DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:2.2.0");
 
     @Container
     static final LocalStackContainer localstack = new LocalStackContainer(localstackImage)
@@ -60,16 +61,16 @@ public class AwsSecretsManagerIT {
     @Test
     public void testSecrets() {
 
-        String secret = "{\"a\":\"top secret\"}";
+        String s1 = "{\"a\":\"top secret\"}";
+        String s2 = "{\"a\":\"top secret updated\"}";
 
         AWSSecretsManager secretsManager = app.getInstance(AWSSecretsManager.class);
 
-        PutSecretValueRequest putSecret = new PutSecretValueRequest().withSecretString(secret);
-        String arn = secretsManager.putSecretValue(putSecret).getARN();
+        String arn = secretsManager.createSecret(new CreateSecretRequest().withSecretString(s1).withName("s")).getARN();
         assertNotNull(arn);
+        assertEquals(s1, secretsManager.getSecretValue(new GetSecretValueRequest().withSecretId(arn)).getSecretString());
 
-        GetSecretValueRequest getSecret = new GetSecretValueRequest().withSecretId(arn);
-        String secretRead = secretsManager.getSecretValue(getSecret).getSecretString();
-        assertEquals(secret, secretRead);
+        secretsManager.putSecretValue(new PutSecretValueRequest().withSecretString(s2).withSecretId(arn));
+        assertEquals(s2, secretsManager.getSecretValue(new GetSecretValueRequest().withSecretId(arn)).getSecretString());
     }
 }

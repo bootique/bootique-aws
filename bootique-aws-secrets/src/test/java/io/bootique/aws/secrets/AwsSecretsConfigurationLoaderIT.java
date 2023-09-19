@@ -22,8 +22,8 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
-import com.amazonaws.services.secretsmanager.model.PutSecretValueRequest;
-import com.amazonaws.services.secretsmanager.model.PutSecretValueResult;
+import com.amazonaws.services.secretsmanager.model.CreateSecretRequest;
+import com.amazonaws.services.secretsmanager.model.CreateSecretResult;
 import io.bootique.BQCoreModule;
 import io.bootique.BQRuntime;
 import io.bootique.Bootique;
@@ -44,11 +44,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @BQTest
 public class AwsSecretsConfigurationLoaderIT {
 
-    private static PutSecretValueResult SECRET1;
-    private static PutSecretValueResult SECRET2;
+    private static CreateSecretResult SECRET1;
+    private static CreateSecretResult SECRET2;
 
     // TODO: unfortunately can't reuse Localstack between the tests, as Testcontainers doesn't provide a GLOBAL scope
-    private static final DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:0.11.3");
+    private static final DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:2.2.0");
 
     @Container
     static final LocalStackContainer localstack = new LocalStackContainer(localstackImage)
@@ -65,10 +65,10 @@ public class AwsSecretsConfigurationLoaderIT {
                 .withEndpointConfiguration(localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER))
                 .build();
 
-        SECRET1 = sm.putSecretValue(new PutSecretValueRequest().withSecretString(secret1).withSecretId("secret1"));
+        SECRET1 = sm.createSecret(new CreateSecretRequest().withSecretString(secret1).withName("secret1"));
         assertNotNull(SECRET1);
 
-        SECRET2 = sm.putSecretValue(new PutSecretValueRequest().withSecretString(secret2).withSecretId("secret2"));
+        SECRET2 = sm.createSecret(new CreateSecretRequest().withSecretString(secret2).withName("secret2"));
         assertNotNull(SECRET2);
     }
 

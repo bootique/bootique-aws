@@ -39,7 +39,7 @@ public class AwsSecretsManagerIT {
 
     // TODO: unfortunately can't reuse Localstack between the tests, as Testcontainers doesn't provide a GLOBAL scope
 
-    static DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:0.11.3");
+    static DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:2.2.0");
 
     @Container
     static final LocalStackContainer localstack = new LocalStackContainer(localstackImage)
@@ -58,14 +58,16 @@ public class AwsSecretsManagerIT {
     @Test
     public void testSecrets() {
 
-        String secret = "{\"a\":\"top secret\"}";
+        String s1 = "{\"a\":\"top secret\"}";
+        String s2 = "{\"a\":\"top secret updated\"}";
 
         SecretsManagerClient secretsManager = app.getInstance(SecretsManagerClient.class);
 
-        String arn = secretsManager.putSecretValue(b -> b.secretString(secret)).arn();
+        String arn = secretsManager.createSecret(b -> b.secretString(s1).name("s")).arn();
         assertNotNull(arn);
+        assertEquals(s1, secretsManager.getSecretValue(b -> b.secretId(arn)).secretString());
 
-        String secretRead = secretsManager.getSecretValue(b -> b.secretId(arn)).secretString();
-        assertEquals(secret, secretRead);
+        secretsManager.putSecretValue(b -> b.secretString(s2).secretId(arn));
+        assertEquals(s2, secretsManager.getSecretValue(b -> b.secretId(arn)).secretString());
     }
 }
