@@ -1,3 +1,7 @@
+## 3.0.M2
+
+* #21 Upgrade AWS 2 lib to 2.20.150
+
 ## 3.0.M1
 
 * #10 Integration with AWS Java SDK 2.x
