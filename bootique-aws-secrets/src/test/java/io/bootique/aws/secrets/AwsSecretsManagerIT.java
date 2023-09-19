@@ -54,8 +54,8 @@ public class AwsSecretsManagerIT {
             .autoLoadModules()
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.accessKey", localstack.getAccessKey()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.secretKey", localstack.getSecretKey()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.signingRegion", localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER).getSigningRegion()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.serviceEndpoint", localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER).getServiceEndpoint()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.signingRegion", localstack.getRegion()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.serviceEndpoint", localstack.getEndpointOverride(LocalStackContainer.Service.SECRETSMANAGER).toString()))
             .createRuntime();
 
     @Test

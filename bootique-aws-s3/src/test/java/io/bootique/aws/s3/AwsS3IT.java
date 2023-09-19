@@ -56,8 +56,8 @@ public class AwsS3IT {
             .autoLoadModules()
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.accessKey", localstack.getAccessKey()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.secretKey", localstack.getSecretKey()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awss3.signingRegion", localstack.getEndpointConfiguration(LocalStackContainer.Service.S3).getSigningRegion()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awss3.serviceEndpoint", localstack.getEndpointConfiguration(LocalStackContainer.Service.S3).getServiceEndpoint()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awss3.signingRegion", localstack.getRegion()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awss3.serviceEndpoint", localstack.getEndpointOverride(LocalStackContainer.Service.S3).toString()))
             .createRuntime();
 
     @Test

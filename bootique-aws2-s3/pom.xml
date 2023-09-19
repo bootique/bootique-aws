@@ -65,12 +65,6 @@
             <artifactId>localstack</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- TODO: ugly... SDK v1 is needed by Testcontainers LocalStackContainer-->
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-core</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>

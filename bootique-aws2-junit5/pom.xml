@@ -47,11 +47,6 @@
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
         </dependency>
-        <!-- TODO: ugly... SDK v1 is needed by Testcontainers LocalStackContainer-->
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-core</artifactId>
-        </dependency>
 
         <!-- Unit test dependencies -->
         <dependency>

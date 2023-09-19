@@ -20,6 +20,7 @@ package io.bootique.aws.secrets;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
 import com.amazonaws.services.secretsmanager.model.CreateSecretRequest;
@@ -60,9 +61,14 @@ public class AwsSecretsConfigurationLoaderIT {
         String secret1 = "{\"password\":\"y_secret\"}";
         String secret2 = "{\"password\":\"z_secret\", \"user\":\"z_uname\"}";
 
+        AwsClientBuilder.EndpointConfiguration configuration = new AwsClientBuilder.EndpointConfiguration(
+                localstack.getEndpointOverride(LocalStackContainer.Service.SECRETSMANAGER).toString(),
+                localstack.getRegion()
+        );
+
         AWSSecretsManager sm = AWSSecretsManagerClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(localstack.getAccessKey(), localstack.getSecretKey())))
-                .withEndpointConfiguration(localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER))
+                .withEndpointConfiguration(configuration)
                 .build();
 
         SECRET1 = sm.createSecret(new CreateSecretRequest().withSecretString(secret1).withName("secret1"));
@@ -77,10 +83,10 @@ public class AwsSecretsConfigurationLoaderIT {
             .autoLoadModules()
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.accessKey", localstack.getAccessKey()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.secretKey", localstack.getSecretKey()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.signingRegion", localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER).getSigningRegion()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.serviceEndpoint", localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER).getServiceEndpoint()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.signingRegion", localstack.getRegion()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.serviceEndpoint", localstack.getEndpointOverride(LocalStackContainer.Service.SECRETSMANAGER).toString()))
 
-            // load some base config.. Secrets will be merged on top of it
+            // load some base config. Secrets will be merged on top of it
             .module(b -> BQCoreModule.extend(b).setProperty("bq.a.user", "a_uname"))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.a.password", "a_secret"))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.b.c.user", "bc_uname"))

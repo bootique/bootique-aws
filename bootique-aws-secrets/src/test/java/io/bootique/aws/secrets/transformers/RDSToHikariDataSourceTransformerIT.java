@@ -21,6 +21,7 @@ package io.bootique.aws.secrets.transformers;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
 import com.amazonaws.services.secretsmanager.model.CreateSecretRequest;
 import com.zaxxer.hikari.HikariConfig;
@@ -64,9 +65,14 @@ public class RDSToHikariDataSourceTransformerIT {
         AWSCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(
                 new BasicAWSCredentials(localstack.getAccessKey(), localstack.getSecretKey()));
 
+        AwsClientBuilder.EndpointConfiguration configuration = new AwsClientBuilder.EndpointConfiguration(
+                localstack.getEndpointOverride(LocalStackContainer.Service.SECRETSMANAGER).toString(),
+                localstack.getRegion()
+        );
+
         AWSSecretsManagerClientBuilder.standard()
                 .withCredentials(credentialsProvider)
-                .withEndpointConfiguration(localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER))
+                .withEndpointConfiguration(configuration)
                 .build()
                 .createSecret(new CreateSecretRequest().withSecretString(rdsSecret).withName("rdsSecret"));
     }
@@ -76,8 +82,8 @@ public class RDSToHikariDataSourceTransformerIT {
             .autoLoadModules()
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.accessKey", localstack.getAccessKey()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.secretKey", localstack.getSecretKey()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.signingRegion", localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER).getSigningRegion()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.serviceEndpoint", localstack.getEndpointConfiguration(LocalStackContainer.Service.SECRETSMANAGER).getServiceEndpoint()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.signingRegion", localstack.getRegion()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.serviceEndpoint", localstack.getEndpointOverride(LocalStackContainer.Service.SECRETSMANAGER).toString()))
 
             // base config. Secrets will be merged on top
             .module(b -> BQCoreModule.extend(b).setProperty("bq.a.type", "hikari"))
