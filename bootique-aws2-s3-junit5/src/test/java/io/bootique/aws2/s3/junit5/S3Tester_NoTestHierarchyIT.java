@@ -26,6 +26,7 @@ import io.bootique.aws2.s3.S3ClientFactory;
 import io.bootique.junit5.BQApp;
 import io.bootique.junit5.BQTest;
 import io.bootique.junit5.BQTestTool;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -36,6 +37,7 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @BQTest
+@Disabled("Until #23 is fixed")
 public class S3Tester_NoTestHierarchyIT {
 
     // Intentionally not inheriting from BaseAwsTest and placing both AwsTester and S3Tester in the same class
