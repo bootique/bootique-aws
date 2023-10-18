@@ -32,7 +32,6 @@ import io.bootique.config.ConfigurationFactory;
 import io.bootique.junit5.BQApp;
 import io.bootique.junit5.BQTest;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -44,7 +43,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Testcontainers
 @BQTest
-@Disabled("Until #23 is fixed")
 public class AwsSecretsConfigurationLoaderIT {
 
     private static CreateSecretResult SECRET1;
