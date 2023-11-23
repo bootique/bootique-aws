@@ -62,7 +62,7 @@ public class AwsS3IT {
             .createRuntime();
 
     @Test
-    public void testBucketOperations() throws IOException {
+    public void bucketOperations() throws IOException {
         S3Client s3 = app.getInstance(S3ClientFactory.class).client();
 
         // create bucket

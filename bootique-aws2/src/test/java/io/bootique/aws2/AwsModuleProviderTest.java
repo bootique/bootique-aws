@@ -25,12 +25,12 @@ import org.junit.jupiter.api.Test;
 public class AwsModuleProviderTest {
 
     @Test
-    public void testAutoLoading() {
+    public void autoLoading() {
         BQModuleProviderChecker.testAutoLoadable(AwsModuleProvider.class);
     }
 
     @Test
-    public void testConfigLoad() {
+    public void configLoad() {
         BQModuleProviderChecker.testMetadata(AwsModuleProvider.class);
     }
 }

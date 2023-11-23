@@ -44,7 +44,7 @@ public class AwsTesterIT {
             .createRuntime();
 
     @Test
-    public void testS3() throws IOException {
+    public void s3() throws IOException {
         S3Client s3 = S3Client
                 .builder()
                 .endpointOverride(tester.getEndpointOverride())

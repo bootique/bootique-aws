@@ -101,7 +101,7 @@ public class AwsSecretsConfigurationLoaderIT {
             .createRuntime();
 
     @Test
-    public void testConfigMerged() {
+    public void configMerged() {
 
         UserProfile a = app.getInstance(ConfigurationFactory.class).config(UserProfile.class, "a");
         assertEquals("a_uname", a.user);

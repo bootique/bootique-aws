@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 public class AwsModuleProviderTest {
 
     @Test
-    public void testAutoLoading() {
+    public void autoLoading() {
         BQModuleProviderChecker.testAutoLoadable(AwsModuleProvider.class);
     }
 }

@@ -56,7 +56,7 @@ public class AwsSecretsManagerIT {
             .createRuntime();
 
     @Test
-    public void testSecrets() {
+    public void secrets() {
 
         String s1 = "{\"a\":\"top secret\"}";
         String s2 = "{\"a\":\"top secret updated\"}";

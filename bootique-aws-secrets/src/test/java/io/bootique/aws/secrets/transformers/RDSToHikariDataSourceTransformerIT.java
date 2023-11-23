@@ -96,7 +96,7 @@ public class RDSToHikariDataSourceTransformerIT {
             .createRuntime();
 
     @Test
-    public void testRdsConfigTranslatedAndMerged() {
+    public void rdsConfigTranslatedAndMerged() {
 
         HikariConfig config = app.getInstance(ConfigurationFactory.class)
                 .config(TestHikariFactory.class, "a")

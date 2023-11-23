@@ -61,7 +61,7 @@ public class AwsS3IT {
             .createRuntime();
 
     @Test
-    public void testBucketOperations() throws IOException {
+    public void bucketOperations() throws IOException {
         AmazonS3 s3 = app.getInstance(AmazonS3.class);
 
         // create bucket

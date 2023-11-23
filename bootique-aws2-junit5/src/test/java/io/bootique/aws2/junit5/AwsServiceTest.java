@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AwsServiceTest {
 
     @Test
-    public void testMatchesTestcontainersServiceList() {
+    public void matchesTestcontainersServiceList() {
         assertEquals(AwsService.values().length, LocalStackContainer.Service.values().length);
         for(AwsService s : AwsService.values()) {
             assertDoesNotThrow(() -> s.toLocalstackService());
