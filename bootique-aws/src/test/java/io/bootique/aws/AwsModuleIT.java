@@ -39,7 +39,7 @@ public class AwsModuleIT {
 
     @Test
     @DisplayName("Credentials provider based on BQ config")
-    public void testAwsConfig_BootiqueCredentialsProvider() {
+    public void awsConfig_BootiqueCredentialsProvider() {
         AwsConfig config = testFactory
                 .app()
                 .autoLoadModules()
@@ -57,7 +57,7 @@ public class AwsModuleIT {
 
     @Test
     @DisplayName("When no BQ credentials configured, alt provider must take over")
-    public void testAwsConfig_AltCredentialsProvider() {
+    public void awsConfig_AltCredentialsProvider() {
         AwsConfig config = testFactory
                 .app()
                 .autoLoadModules()
@@ -75,7 +75,7 @@ public class AwsModuleIT {
 
     @Test
     @DisplayName("When no BQ credentials configured, alt provider must take over")
-    public void testAwsConfig_AltCredentialsProvider_Ordering() {
+    public void awsConfig_AltCredentialsProvider_Ordering() {
         AwsConfig config = testFactory
                 .app()
                 .autoLoadModules()
@@ -96,7 +96,7 @@ public class AwsModuleIT {
 
     @Test
     @DisplayName("When BQ credentials are present, alt provider must be ignored")
-    public void testAwsConfig_AltCredentialsProvider_BqProviderWins() {
+    public void awsConfig_AltCredentialsProvider_BqProviderWins() {
         AwsConfig config = testFactory
                 .app()
                 .autoLoadModules()

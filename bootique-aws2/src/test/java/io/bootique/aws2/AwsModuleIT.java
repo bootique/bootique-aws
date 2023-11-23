@@ -36,7 +36,7 @@ public class AwsModuleIT {
 
     @Test
     @DisplayName("Credentials provider based on BQ config with access and secret keys")
-    public void testAwsConfig_ExplicitCredentialsProvider() {
+    public void awsConfig_ExplicitCredentialsProvider() {
         AwsConfig config = testFactory
                 .app()
                 .autoLoadModules()
@@ -55,7 +55,7 @@ public class AwsModuleIT {
 
     @Test
     @DisplayName("Credentials provider based on BQ config with access and secret keys and session token")
-    public void testAwsConfig_ExplicitCredentialsProvider_SessionToken() {
+    public void awsConfig_ExplicitCredentialsProvider_SessionToken() {
         AwsConfig config = testFactory
                 .app()
                 .autoLoadModules()
@@ -75,7 +75,7 @@ public class AwsModuleIT {
 
     @Test
     @DisplayName("Credentials provider based on BQ config with profile")
-    public void testAwsConfig_ProfileCredentialsProvider() {
+    public void awsConfig_ProfileCredentialsProvider() {
         AwsConfig config = testFactory
                 .app()
                 .autoLoadModules()
@@ -89,7 +89,7 @@ public class AwsModuleIT {
 
     @Test
     @DisplayName("When no BQ credentials configured, alt provider must take over")
-    public void testAwsConfig_DICredentialsProvider() {
+    public void awsConfig_DICredentialsProvider() {
         AwsConfig config = testFactory
                 .app()
                 .autoLoadModules()
@@ -107,7 +107,7 @@ public class AwsModuleIT {
 
     @Test
     @DisplayName("When no BQ credentials configured, alt provider must take over")
-    public void testAwsConfig_DICredentialsProvider_Ordering() {
+    public void awsConfig_DICredentialsProvider_Ordering() {
         AwsConfig config = testFactory
                 .app()
                 .autoLoadModules()
@@ -128,7 +128,7 @@ public class AwsModuleIT {
 
     @Test
     @DisplayName("When BQ credentials are present, alt provider must be ignored")
-    public void testAwsConfig_DICredentialsProvider_ConfigProviderWins() {
+    public void awsConfig_DICredentialsProvider_ConfigProviderWins() {
         AwsConfig config = testFactory
                 .app()
                 .autoLoadModules()
