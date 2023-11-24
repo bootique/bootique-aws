@@ -28,6 +28,10 @@ import io.bootique.di.Provides;
 import javax.inject.Singleton;
 import java.util.Set;
 
+/**
+ * @deprecated in favor of AWS v2 API
+ */
+@Deprecated(since = "3.0", forRemoval = true)
 public class AwsModule extends ConfigModule {
 
     public static AwsModuleExtender extend(Binder binder) {

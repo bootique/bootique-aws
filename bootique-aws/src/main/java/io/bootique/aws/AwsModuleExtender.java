@@ -26,8 +26,10 @@ import io.bootique.di.Binder;
 import io.bootique.di.SetBuilder;
 
 /**
- * @since 2.0.B1
+ * @since 2.0
+ * @deprecated in favor of AWS v2 API
  */
+@Deprecated(since = "3.0", forRemoval = true)
 public class AwsModuleExtender extends ModuleExtender<AwsModuleExtender> {
 
     public static final int DEFAULT_CREDENTIALS_PROVIDER_ORDER = 10;

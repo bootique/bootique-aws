@@ -30,8 +30,10 @@ import io.bootique.di.Provides;
 import javax.inject.Singleton;
 
 /**
- * @since 2.0.B1
+ * @since 2.0
+ * @deprecated in favor of AWS v2 API
  */
+@Deprecated(since = "3.0", forRemoval = true)
 public class AwsSecretsModule extends ConfigModule {
 
     public static AwsSecretsManagerExtender extend(Binder binder) {

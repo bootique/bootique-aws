@@ -25,6 +25,10 @@ import io.bootique.annotation.BQConfig;
 import io.bootique.aws.AwsConfig;
 import io.bootique.aws.AwsServiceFactory;
 
+/**
+ * @deprecated in favor of AWS v2 API
+ */
+@Deprecated(since = "3.0", forRemoval = true)
 @BQConfig
 public class S3Factory extends AwsServiceFactory {
 

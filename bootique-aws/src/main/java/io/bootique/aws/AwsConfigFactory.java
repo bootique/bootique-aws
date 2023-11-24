@@ -31,6 +31,10 @@ import io.bootique.aws.credentials.OrderedCredentialsProvider;
 import java.util.Comparator;
 import java.util.Set;
 
+/**
+ * @deprecated in favor of AWS v2 API
+ */
+@Deprecated(since = "3.0", forRemoval = true)
 @BQConfig
 public class AwsConfigFactory {
 

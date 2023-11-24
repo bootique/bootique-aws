@@ -26,8 +26,10 @@ import io.bootique.annotation.BQConfigProperty;
  * A common superclass of factories for various AWS services such as S3, etc. Used by other "bootique-aws-*" modules or
  * custom modules that require to map some AWS service.
  *
- * @since 2.0.B1
+ * @since 2.0
+ * @deprecated in favor of AWS v2 API
  */
+@Deprecated(since = "3.0", forRemoval = true)
 @BQConfig
 public abstract class AwsServiceFactory {
 

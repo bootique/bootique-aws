@@ -24,8 +24,10 @@ import com.fasterxml.jackson.databind.JsonNode;
  * An extension of {@link AwsSecretsConfigurationLoader} to transform AWS secret JSON to a format expected by a given
  * Bootique config.
  *
- * @since 2.0.B1
+ * @since 2.0
+ * @deprecated in favor of AWS v2 API
  */
+@Deprecated(since = "3.0", forRemoval = true)
 public interface AwsJsonTransformer {
 
     JsonNode fromSecret(JsonNode awsSecret);

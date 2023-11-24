@@ -23,8 +23,10 @@ import io.bootique.di.Binder;
 import io.bootique.di.MapBuilder;
 
 /**
- * @since 2.0.B1
+ * @since 2.0
+ * @deprecated in favor of AWS v2 API
  */
+@Deprecated(since = "3.0", forRemoval = true)
 public class AwsSecretsManagerExtender extends ModuleExtender<AwsSecretsManagerExtender> {
 
     private MapBuilder<String, AwsJsonTransformer> transformers;

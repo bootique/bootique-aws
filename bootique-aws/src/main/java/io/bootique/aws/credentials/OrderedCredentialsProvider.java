@@ -21,8 +21,10 @@ package io.bootique.aws.credentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 
 /**
- * @since 2.0.B1
+ * @since 2.0
+ * @deprecated in favor of AWS v2 API
  */
+@Deprecated(since = "3.0", forRemoval = true)
 public class OrderedCredentialsProvider {
 
     private final AWSCredentialsProvider provider;

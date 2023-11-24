@@ -1,3 +1,7 @@
+## 3.0-M3
+
+* #24 Deprecate AWS v1 API integration modules
+
 ## 3.0.M2
 
 * #21 Upgrade AWS 2 lib to 2.20.150

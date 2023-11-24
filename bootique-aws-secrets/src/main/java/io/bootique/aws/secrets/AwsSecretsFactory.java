@@ -34,8 +34,10 @@ import java.util.Map;
  * The factory is used in two places over the same configuration structure: {@link AwsSecretsConfigurationLoader} to
  * update config, and the {@link AwsSecretsModule} to create injectable AWSSecretsManager.
  *
- * @since 2.0.B1
+ * @since 2.0
+ * @deprecated in favor of AWS v2 API
  */
+@Deprecated(since = "3.0", forRemoval = true)
 @BQConfig
 public class AwsSecretsFactory extends AwsServiceFactory {
 

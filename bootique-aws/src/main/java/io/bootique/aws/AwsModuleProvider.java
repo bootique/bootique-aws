@@ -23,6 +23,10 @@ package io.bootique.aws;
 import io.bootique.BQModuleProvider;
 import io.bootique.bootstrap.BuiltModule;
 
+/**
+ * @deprecated in favor of AWS v2 API
+ */
+@Deprecated(since = "3.0", forRemoval = true)
 public class AwsModuleProvider implements BQModuleProvider {
 
     @Override

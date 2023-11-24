@@ -27,6 +27,10 @@ import io.bootique.di.Provides;
 
 import javax.inject.Singleton;
 
+/**
+ * @deprecated in favor of AWS v2 API
+ */
+@Deprecated(since = "3.0", forRemoval = true)
 public class AwsS3Module extends ConfigModule {
 
     @Provides

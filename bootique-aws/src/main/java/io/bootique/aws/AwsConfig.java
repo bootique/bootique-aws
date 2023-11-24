@@ -25,6 +25,10 @@ import com.amazonaws.regions.Regions;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * @deprecated in favor of AWS v2 API
+ */
+@Deprecated(since = "3.0", forRemoval = true)
 public class AwsConfig {
 
     private final Regions defaultRegion;
