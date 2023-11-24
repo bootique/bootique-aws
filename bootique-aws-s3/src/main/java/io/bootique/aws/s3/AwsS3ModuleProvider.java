@@ -20,12 +20,15 @@
 package io.bootique.aws.s3;
 
 import io.bootique.BQModuleProvider;
-import io.bootique.di.BQModule;
+import io.bootique.bootstrap.BuiltModule;
 
 public class AwsS3ModuleProvider implements BQModuleProvider {
 
     @Override
-    public BQModule module() {
-        return new AwsS3Module();
+    public BuiltModule buildModule() {
+        return BuiltModule.of(new AwsS3Module())
+                .provider(this)
+                .description("Provides integration with AWS S3 client v1.")
+                .build();
     }
 }

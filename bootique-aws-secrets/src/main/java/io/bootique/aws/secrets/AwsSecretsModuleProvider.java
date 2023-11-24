@@ -19,11 +19,7 @@
 package io.bootique.aws.secrets;
 
 import io.bootique.BQModuleProvider;
-import io.bootique.di.BQModule;
-
-import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.Map;
+import io.bootique.bootstrap.BuiltModule;
 
 /**
  * @since 2.0.B1
@@ -31,12 +27,11 @@ import java.util.Map;
 public class AwsSecretsModuleProvider implements BQModuleProvider {
 
     @Override
-    public BQModule module() {
-        return new AwsSecretsModule();
-    }
-
-    @Override
-    public Map<String, Type> configs() {
-        return Collections.singletonMap("awssecrets", AwsSecretsFactory.class);
+    public BuiltModule buildModule() {
+        return BuiltModule.of(new AwsSecretsModule())
+                .provider(this)
+                .description("Provides integration with AWS Secrets client v1.")
+                .config("awssecrets", AwsSecretsFactory.class)
+                .build();
     }
 }

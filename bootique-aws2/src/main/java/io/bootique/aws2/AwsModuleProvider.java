@@ -21,21 +21,16 @@ package io.bootique.aws2;
 
 
 import io.bootique.BQModuleProvider;
-import io.bootique.di.BQModule;
-
-import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.Map;
+import io.bootique.bootstrap.BuiltModule;
 
 public class AwsModuleProvider implements BQModuleProvider {
 
     @Override
-    public BQModule module() {
-        return new AwsModule();
-    }
-
-    @Override
-    public Map<String, Type> configs() {
-        return Collections.singletonMap("aws", AwsConfigFactory.class);
+    public BuiltModule buildModule() {
+        return BuiltModule.of(new AwsModule())
+                .provider(this)
+                .description("Provides integration with AWS client v2.")
+                .config("aws", AwsConfigFactory.class)
+                .build();
     }
 }
