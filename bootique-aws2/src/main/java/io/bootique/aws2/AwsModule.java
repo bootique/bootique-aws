@@ -19,18 +19,31 @@
 
 package io.bootique.aws2;
 
-import io.bootique.ConfigModule;
+import io.bootique.BQModuleProvider;
+import io.bootique.bootstrap.BuiltModule;
 import io.bootique.config.ConfigurationFactory;
+import io.bootique.di.BQModule;
 import io.bootique.di.Binder;
 import io.bootique.di.Injector;
 import io.bootique.di.Provides;
 
 import javax.inject.Singleton;
 
-public class AwsModule extends ConfigModule {
+public class AwsModule implements BQModule, BQModuleProvider {
+
+    private static final String CONFIG_PREFIX = "aws";
 
     public static AwsModuleExtender extend(Binder binder) {
         return new AwsModuleExtender(binder);
+    }
+
+    @Override
+    public BuiltModule buildModule() {
+        return BuiltModule.of(new AwsModule())
+                .provider(this)
+                .description("Provides integration with AWS client v2.")
+                .config(CONFIG_PREFIX, AwsConfigFactory.class)
+                .build();
     }
 
     @Override
@@ -41,6 +54,6 @@ public class AwsModule extends ConfigModule {
     @Provides
     @Singleton
     AwsConfig provideConfig(ConfigurationFactory configFactory, Injector injector) {
-        return config(AwsConfigFactory.class, configFactory).createConfig(injector);
+        return configFactory.config(AwsConfigFactory.class, CONFIG_PREFIX).createConfig(injector);
     }
 }

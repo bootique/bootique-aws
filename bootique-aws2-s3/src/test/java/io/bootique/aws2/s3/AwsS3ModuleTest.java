@@ -17,20 +17,16 @@
  * under the License.
  */
 
-package io.bootique.aws2;
+package io.bootique.aws2.s3;
+
 
 import io.bootique.junit5.BQModuleProviderChecker;
 import org.junit.jupiter.api.Test;
 
-public class AwsModuleProviderTest {
+public class AwsS3ModuleTest {
 
     @Test
     public void autoLoading() {
-        BQModuleProviderChecker.testAutoLoadable(AwsModuleProvider.class);
-    }
-
-    @Test
-    public void configLoad() {
-        BQModuleProviderChecker.testMetadata(AwsModuleProvider.class);
+        BQModuleProviderChecker.testAutoLoadable(AwsS3Module.class);
     }
 }

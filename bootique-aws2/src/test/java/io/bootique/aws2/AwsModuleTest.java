@@ -17,18 +17,20 @@
  * under the License.
  */
 
-package io.bootique.aws2.s3;
+package io.bootique.aws2;
 
-import io.bootique.BQModuleProvider;
-import io.bootique.bootstrap.BuiltModule;
+import io.bootique.junit5.BQModuleProviderChecker;
+import org.junit.jupiter.api.Test;
 
-public class AwsS3ModuleProvider implements BQModuleProvider {
+public class AwsModuleTest {
 
-    @Override
-    public BuiltModule buildModule() {
-        return BuiltModule.of(new AwsS3Module())
-                .provider(this)
-                .description("Provides integration with AWS S3 client v2.")
-                .build();
+    @Test
+    public void autoLoading() {
+        BQModuleProviderChecker.testAutoLoadable(AwsModule.class);
+    }
+
+    @Test
+    public void configLoad() {
+        BQModuleProviderChecker.testMetadata(AwsModule.class);
     }
 }

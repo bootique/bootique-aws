@@ -19,19 +19,37 @@
 
 package io.bootique.aws2.s3;
 
-import io.bootique.ConfigModule;
+import io.bootique.BQModuleProvider;
 import io.bootique.aws2.AwsConfig;
+import io.bootique.bootstrap.BuiltModule;
 import io.bootique.config.ConfigurationFactory;
+import io.bootique.di.BQModule;
+import io.bootique.di.Binder;
 import io.bootique.di.Injector;
 import io.bootique.di.Provides;
 
 import javax.inject.Singleton;
 
-public class AwsS3Module extends ConfigModule {
+public class AwsS3Module implements BQModule, BQModuleProvider {
+
+    private static final String CONFIG_PREFIX = "awss3";
+
+    @Override
+    public BuiltModule buildModule() {
+        return BuiltModule.of(new AwsS3Module())
+                .provider(this)
+                .description("Provides integration with AWS S3 client v2.")
+                .config(CONFIG_PREFIX, S3ClientFactoryFactory.class)
+                .build();
+    }
+
+    @Override
+    public void configure(Binder binder) {
+    }
 
     @Provides
     @Singleton
     S3ClientFactory provideS3ClientFactory(ConfigurationFactory configFactory, AwsConfig config, Injector injector) {
-        return config(S3ClientFactoryFactory.class, configFactory).create(config, injector);
+        return configFactory.config(S3ClientFactoryFactory.class, CONFIG_PREFIX).create(config, injector);
     }
 }

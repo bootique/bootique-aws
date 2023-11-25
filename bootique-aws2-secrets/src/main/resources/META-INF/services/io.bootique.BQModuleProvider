@@ -1,1 +1,1 @@
-io.bootique.aws2.secrets.AwsSecretsModuleProvider
+io.bootique.aws2.secrets.AwsSecretsModule

@@ -16,21 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package io.bootique.aws2.secrets;
 
-package io.bootique.aws2;
+import io.bootique.junit5.BQModuleProviderChecker;
+import org.junit.jupiter.api.Test;
 
+public class AwsSecretsModuleTest {
 
-import io.bootique.BQModuleProvider;
-import io.bootique.bootstrap.BuiltModule;
-
-public class AwsModuleProvider implements BQModuleProvider {
-
-    @Override
-    public BuiltModule buildModule() {
-        return BuiltModule.of(new AwsModule())
-                .provider(this)
-                .description("Provides integration with AWS client v2.")
-                .config("aws", AwsConfigFactory.class)
-                .build();
+    @Test
+    public void autoLoading() {
+        BQModuleProviderChecker.testAutoLoadable(AwsSecretsModule.class);
     }
 }
