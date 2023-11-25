@@ -32,7 +32,7 @@ public class AwsS3ModuleProvider implements BQModuleProvider {
     public BuiltModule buildModule() {
         return BuiltModule.of(new AwsS3Module())
                 .provider(this)
-                .description("Deprecated and should be replaced with 'bootique-aws2-s3'.")
+                .description("Deprecated and can be replaced with 'bootique-aws2-s3'.")
                 .build();
     }
 }

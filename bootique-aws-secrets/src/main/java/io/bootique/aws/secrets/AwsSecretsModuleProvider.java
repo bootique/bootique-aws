@@ -32,7 +32,7 @@ public class AwsSecretsModuleProvider implements BQModuleProvider {
     public BuiltModule buildModule() {
         return BuiltModule.of(new AwsSecretsModule())
                 .provider(this)
-                .description("Deprecated and should be replaced with 'bootique-aws2-secrets'.")
+                .description("Deprecated and can be replaced with 'bootique-aws2-secrets'.")
                 .config("awssecrets", AwsSecretsFactory.class)
                 .build();
     }
