@@ -23,7 +23,7 @@ import org.testcontainers.containers.localstack.LocalStackContainer;
 /**
  * Lists AWS services that can be emulated in your tests.
  *
- * @since 3.0.M1
+ * @since 3.0
  */
 public enum AwsService {
 

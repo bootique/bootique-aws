@@ -39,7 +39,7 @@ import java.util.stream.Stream;
  * A {@link io.bootique.junit5.BQTestTool} that allows to emulate multiple AWS services via Localstack and
  * Testcontainers.
  *
- * @since 3.0.M1
+ * @since 3.0
  */
 public class AwsTester implements BQBeforeScopeCallback, BQAfterScopeCallback {
 

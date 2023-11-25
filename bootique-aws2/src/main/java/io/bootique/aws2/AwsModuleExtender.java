@@ -26,7 +26,7 @@ import io.bootique.di.SetBuilder;
 import software.amazon.awssdk.auth.credentials.*;
 
 /**
- * @since 2.0.B1
+ * @since 2.0
  */
 public class AwsModuleExtender extends ModuleExtender<AwsModuleExtender> {
 

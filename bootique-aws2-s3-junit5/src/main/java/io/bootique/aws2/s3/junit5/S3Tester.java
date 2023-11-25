@@ -33,7 +33,7 @@ import java.util.function.Consumer;
  * A {@link io.bootique.junit5.BQTestTool} that allows to manage test S3 buckets within a unit test. Only works with
  * a single test {@link io.bootique.BQRuntime}.
  *
- * @since 3.0.M1
+ * @since 3.0
  */
 public class S3Tester implements BQBeforeMethodCallback, BQAfterMethodCallback {
 

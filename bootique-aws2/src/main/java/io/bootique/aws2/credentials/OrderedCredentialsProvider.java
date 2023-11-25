@@ -21,7 +21,7 @@ package io.bootique.aws2.credentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 
 /**
- * @since 2.0.B1
+ * @since 2.0
  */
 public class OrderedCredentialsProvider {
 

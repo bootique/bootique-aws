@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 /**
- * @since 3.0.M1
+ * @since 3.0
  */
 class S3TesterLifecycleManager {
 
