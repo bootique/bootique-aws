@@ -44,7 +44,7 @@ public class AwsSecretsModule implements BQModule, BQModuleProvider {
 
     @Override
     public BuiltModule buildModule() {
-        return BuiltModule.of(new AwsSecretsModule())
+        return BuiltModule.of(this)
                 .provider(this)
                 .description("Provides integration with AWS Secrets client v2.")
                 .config(CONFIG_PREFIX, AwsSecretsFactory.class)

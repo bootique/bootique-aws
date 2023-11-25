@@ -39,7 +39,7 @@ public class AwsModule implements BQModule, BQModuleProvider {
 
     @Override
     public BuiltModule buildModule() {
-        return BuiltModule.of(new AwsModule())
+        return BuiltModule.of(this)
                 .provider(this)
                 .description("Provides integration with AWS client v2.")
                 .config(CONFIG_PREFIX, AwsConfigFactory.class)

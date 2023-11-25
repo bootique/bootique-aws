@@ -36,7 +36,7 @@ public class AwsS3Module implements BQModule, BQModuleProvider {
 
     @Override
     public BuiltModule buildModule() {
-        return BuiltModule.of(new AwsS3Module())
+        return BuiltModule.of(this)
                 .provider(this)
                 .description("Provides integration with AWS S3 client v2.")
                 .config(CONFIG_PREFIX, S3ClientFactoryFactory.class)
