@@ -19,7 +19,7 @@
 package io.bootique.aws.secrets;
 
 import io.bootique.BQModuleProvider;
-import io.bootique.bootstrap.BuiltModule;
+import io.bootique.ModuleCrate;
 
 /**
  * @since 2.0
@@ -29,8 +29,8 @@ import io.bootique.bootstrap.BuiltModule;
 public class AwsSecretsModuleProvider implements BQModuleProvider {
 
     @Override
-    public BuiltModule buildModule() {
-        return BuiltModule.of(new AwsSecretsModule())
+    public ModuleCrate moduleCrate() {
+        return ModuleCrate.of(new AwsSecretsModule())
                 .provider(this)
                 .description("Deprecated, can be replaced with 'bootique-aws2-secrets'.")
                 .config("awssecrets", AwsSecretsFactory.class)

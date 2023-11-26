@@ -21,7 +21,7 @@ package io.bootique.aws2.s3;
 
 import io.bootique.BQModuleProvider;
 import io.bootique.aws2.AwsConfig;
-import io.bootique.bootstrap.BuiltModule;
+import io.bootique.ModuleCrate;
 import io.bootique.config.ConfigurationFactory;
 import io.bootique.di.BQModule;
 import io.bootique.di.Binder;
@@ -35,8 +35,8 @@ public class AwsS3Module implements BQModule, BQModuleProvider {
     private static final String CONFIG_PREFIX = "awss3";
 
     @Override
-    public BuiltModule buildModule() {
-        return BuiltModule.of(this)
+    public ModuleCrate moduleCrate() {
+        return ModuleCrate.of(this)
                 .provider(this)
                 .description("Provides integration with AWS S3 client v2.")
                 .config(CONFIG_PREFIX, S3ClientFactoryFactory.class)

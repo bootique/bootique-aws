@@ -22,7 +22,7 @@ import io.bootique.BQCoreModule;
 import io.bootique.BQModuleProvider;
 import io.bootique.aws2.AwsConfig;
 import io.bootique.aws2.secrets.transformer.RDSToHikariDataSourceTransformer;
-import io.bootique.bootstrap.BuiltModule;
+import io.bootique.ModuleCrate;
 import io.bootique.config.ConfigurationFactory;
 import io.bootique.di.BQModule;
 import io.bootique.di.Binder;
@@ -43,8 +43,8 @@ public class AwsSecretsModule implements BQModule, BQModuleProvider {
     private static final String CONFIG_PREFIX = "awssecrets";
 
     @Override
-    public BuiltModule buildModule() {
-        return BuiltModule.of(this)
+    public ModuleCrate moduleCrate() {
+        return ModuleCrate.of(this)
                 .provider(this)
                 .description("Provides integration with AWS Secrets client v2.")
                 .config(CONFIG_PREFIX, AwsSecretsFactory.class)

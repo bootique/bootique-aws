@@ -20,7 +20,7 @@
 package io.bootique.aws.s3;
 
 import io.bootique.BQModuleProvider;
-import io.bootique.bootstrap.BuiltModule;
+import io.bootique.ModuleCrate;
 
 /**
  * @deprecated in favor of AWS v2 API
@@ -29,8 +29,8 @@ import io.bootique.bootstrap.BuiltModule;
 public class AwsS3ModuleProvider implements BQModuleProvider {
 
     @Override
-    public BuiltModule buildModule() {
-        return BuiltModule.of(new AwsS3Module())
+    public ModuleCrate moduleCrate() {
+        return ModuleCrate.of(new AwsS3Module())
                 .provider(this)
                 .description("Deprecated, can be replaced with 'bootique-aws2-s3'.")
                 .build();
