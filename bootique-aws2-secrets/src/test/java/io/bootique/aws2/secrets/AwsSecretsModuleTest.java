@@ -18,13 +18,13 @@
  */
 package io.bootique.aws2.secrets;
 
-import io.bootique.junit5.BQModuleProviderChecker;
+import io.bootique.junit5.BQModuleTester;
 import org.junit.jupiter.api.Test;
 
 public class AwsSecretsModuleTest {
 
     @Test
-    public void autoLoading() {
-        BQModuleProviderChecker.testAutoLoadable(AwsSecretsModule.class);
+    public void check() {
+        BQModuleTester.of(AwsSecretsModule.class).testAutoLoadable().testConfig();
     }
 }

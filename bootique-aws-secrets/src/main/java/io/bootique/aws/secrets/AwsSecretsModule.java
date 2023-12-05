@@ -21,6 +21,7 @@ package io.bootique.aws.secrets;
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import io.bootique.BQCoreModule;
 import io.bootique.ConfigModule;
+import io.bootique.ModuleCrate;
 import io.bootique.aws.AwsConfig;
 import io.bootique.aws.secrets.transformer.RDSToHikariDataSourceTransformer;
 import io.bootique.config.ConfigurationFactory;
@@ -38,6 +39,14 @@ public class AwsSecretsModule extends ConfigModule {
 
     public static AwsSecretsManagerExtender extend(Binder binder) {
         return new AwsSecretsManagerExtender(binder);
+    }
+
+    @Override
+    public ModuleCrate crate() {
+        return ModuleCrate.of(this)
+                .description("Deprecated, can be replaced with 'bootique-aws2-secrets'.")
+                .config("awssecrets", AwsSecretsFactory.class)
+                .build();
     }
 
     @Override

@@ -20,6 +20,7 @@
 package io.bootique.aws;
 
 import io.bootique.ConfigModule;
+import io.bootique.ModuleCrate;
 import io.bootique.aws.credentials.OrderedCredentialsProvider;
 import io.bootique.config.ConfigurationFactory;
 import io.bootique.di.Binder;
@@ -36,6 +37,14 @@ public class AwsModule extends ConfigModule {
 
     public static AwsModuleExtender extend(Binder binder) {
         return new AwsModuleExtender(binder);
+    }
+
+    @Override
+    public ModuleCrate crate() {
+        return ModuleCrate.of(this)
+                .description("Deprecated, can be replaced with 'bootique-aws2'.")
+                .config("aws", AwsConfigFactory.class)
+                .build();
     }
 
     @Override

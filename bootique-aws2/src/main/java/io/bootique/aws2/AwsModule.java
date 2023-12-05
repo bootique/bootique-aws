@@ -19,17 +19,16 @@
 
 package io.bootique.aws2;
 
-import io.bootique.BQModuleProvider;
+import io.bootique.BQModule;
 import io.bootique.ModuleCrate;
 import io.bootique.config.ConfigurationFactory;
-import io.bootique.di.BQModule;
 import io.bootique.di.Binder;
 import io.bootique.di.Injector;
 import io.bootique.di.Provides;
 
 import javax.inject.Singleton;
 
-public class AwsModule implements BQModule, BQModuleProvider {
+public class AwsModule implements BQModule {
 
     private static final String CONFIG_PREFIX = "aws";
 
@@ -38,9 +37,8 @@ public class AwsModule implements BQModule, BQModuleProvider {
     }
 
     @Override
-    public ModuleCrate moduleCrate() {
+    public ModuleCrate crate() {
         return ModuleCrate.of(this)
-                .provider(this)
                 .description("Provides integration with AWS client v2.")
                 .config(CONFIG_PREFIX, AwsConfigFactory.class)
                 .build();

@@ -19,13 +19,13 @@
 
 package io.bootique.aws;
 
-import io.bootique.junit5.BQModuleProviderChecker;
+import io.bootique.junit5.BQModuleTester;
 import org.junit.jupiter.api.Test;
 
-public class AwsModuleProviderTest {
+public class AwsModuleTest {
 
     @Test
-    public void autoLoading() {
-        BQModuleProviderChecker.testAutoLoadable(AwsModuleProvider.class);
+    public void check() {
+        BQModuleTester.of(AwsModule.class).testAutoLoadable().testConfig();
     }
 }

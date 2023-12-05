@@ -19,12 +19,11 @@
 package io.bootique.aws2.secrets;
 
 import io.bootique.BQCoreModule;
-import io.bootique.BQModuleProvider;
+import io.bootique.BQModule;
+import io.bootique.ModuleCrate;
 import io.bootique.aws2.AwsConfig;
 import io.bootique.aws2.secrets.transformer.RDSToHikariDataSourceTransformer;
-import io.bootique.ModuleCrate;
 import io.bootique.config.ConfigurationFactory;
-import io.bootique.di.BQModule;
 import io.bootique.di.Binder;
 import io.bootique.di.Provides;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
@@ -34,7 +33,7 @@ import javax.inject.Singleton;
 /**
  * @since 3.0
  */
-public class AwsSecretsModule implements BQModule, BQModuleProvider {
+public class AwsSecretsModule implements BQModule {
 
     public static AwsSecretsManagerExtender extend(Binder binder) {
         return new AwsSecretsManagerExtender(binder);
@@ -43,9 +42,8 @@ public class AwsSecretsModule implements BQModule, BQModuleProvider {
     private static final String CONFIG_PREFIX = "awssecrets";
 
     @Override
-    public ModuleCrate moduleCrate() {
+    public ModuleCrate crate() {
         return ModuleCrate.of(this)
-                .provider(this)
                 .description("Provides integration with AWS Secrets client v2.")
                 .config(CONFIG_PREFIX, AwsSecretsFactory.class)
                 .build();

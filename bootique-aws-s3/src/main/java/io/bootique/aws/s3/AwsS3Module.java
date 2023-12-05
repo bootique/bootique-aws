@@ -21,6 +21,7 @@ package io.bootique.aws.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import io.bootique.ConfigModule;
+import io.bootique.ModuleCrate;
 import io.bootique.aws.AwsConfig;
 import io.bootique.config.ConfigurationFactory;
 import io.bootique.di.Provides;
@@ -32,6 +33,13 @@ import javax.inject.Singleton;
  */
 @Deprecated(since = "3.0", forRemoval = true)
 public class AwsS3Module extends ConfigModule {
+
+    @Override
+    public ModuleCrate crate() {
+        return ModuleCrate.of(this)
+                .description("Deprecated, can be replaced with 'bootique-aws2-s3'.")
+                .build();
+    }
 
     @Provides
     @Singleton
