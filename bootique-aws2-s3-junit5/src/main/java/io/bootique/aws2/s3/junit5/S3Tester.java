@@ -20,7 +20,7 @@ package io.bootique.aws2.s3.junit5;
 
 import io.bootique.BQCoreModule;
 import io.bootique.aws2.s3.S3ClientFactory;
-import io.bootique.di.BQModule;
+import io.bootique.BQModule;
 import io.bootique.di.Binder;
 import io.bootique.junit5.BQTestScope;
 import io.bootique.junit5.scope.BQAfterMethodCallback;
