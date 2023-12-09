@@ -39,7 +39,7 @@ public class AwsSecretsModule implements BQModule {
         return new AwsSecretsManagerExtender(binder);
     }
 
-    private static final String CONFIG_PREFIX = "awssecrets";
+    static final String CONFIG_PREFIX = "awssecrets";
 
     @Override
     public ModuleCrate crate() {

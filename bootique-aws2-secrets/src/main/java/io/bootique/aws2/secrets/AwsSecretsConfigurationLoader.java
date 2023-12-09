@@ -74,7 +74,7 @@ public class AwsSecretsConfigurationLoader implements JsonConfigurationLoader {
         ObjectMapper jsonMapper = jackson.newObjectMapper();
 
         ConfigurationFactory configFactory = new JsonConfigurationFactory(mutableInput, jsonMapper);
-        AwsSecretsFactory secretsFactory = configFactory.config(AwsSecretsFactory.class, "awssecrets");
+        AwsSecretsFactory secretsFactory = configFactory.config(AwsSecretsFactory.class, AwsSecretsModule.CONFIG_PREFIX);
 
         if (secretsFactory.isEmpty()) {
             return mutableInput;
