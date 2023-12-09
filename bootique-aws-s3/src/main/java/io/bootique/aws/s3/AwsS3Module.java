@@ -20,10 +20,11 @@
 package io.bootique.aws.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
-import io.bootique.ConfigModule;
+import io.bootique.BQModule;
 import io.bootique.ModuleCrate;
 import io.bootique.aws.AwsConfig;
 import io.bootique.config.ConfigurationFactory;
+import io.bootique.di.Binder;
 import io.bootique.di.Provides;
 
 import javax.inject.Singleton;
@@ -32,7 +33,9 @@ import javax.inject.Singleton;
  * @deprecated in favor of AWS v2 API
  */
 @Deprecated(since = "3.0", forRemoval = true)
-public class AwsS3Module extends ConfigModule {
+public class AwsS3Module implements BQModule {
+
+    private static final String CONFIG_PREFIX = "awss3";
 
     @Override
     public ModuleCrate crate() {
@@ -41,9 +44,13 @@ public class AwsS3Module extends ConfigModule {
                 .build();
     }
 
+    @Override
+    public void configure(Binder binder) {
+    }
+
     @Provides
     @Singleton
     AmazonS3 provideS3Client(ConfigurationFactory configFactory, AwsConfig config) {
-        return config(S3Factory.class, configFactory).createS3(config);
+        return configFactory.config(S3Factory.class, CONFIG_PREFIX).createS3(config);
     }
 }

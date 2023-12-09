@@ -19,7 +19,7 @@
 
 package io.bootique.aws;
 
-import io.bootique.ConfigModule;
+import io.bootique.BQModule;
 import io.bootique.ModuleCrate;
 import io.bootique.aws.credentials.OrderedCredentialsProvider;
 import io.bootique.config.ConfigurationFactory;
@@ -33,7 +33,9 @@ import java.util.Set;
  * @deprecated in favor of AWS v2 API
  */
 @Deprecated(since = "3.0", forRemoval = true)
-public class AwsModule extends ConfigModule {
+public class AwsModule implements BQModule {
+
+    private static final String CONFIG_PREFIX = "aws";
 
     public static AwsModuleExtender extend(Binder binder) {
         return new AwsModuleExtender(binder);
@@ -55,6 +57,6 @@ public class AwsModule extends ConfigModule {
     @Provides
     @Singleton
     AwsConfig provideConfig(ConfigurationFactory configFactory, Set<OrderedCredentialsProvider> credentialsProviders) {
-        return config(AwsConfigFactory.class, configFactory).createConfig(credentialsProviders);
+        return configFactory.config(AwsConfigFactory.class, CONFIG_PREFIX).createConfig(credentialsProviders);
     }
 }

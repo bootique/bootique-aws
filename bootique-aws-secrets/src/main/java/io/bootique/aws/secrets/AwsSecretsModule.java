@@ -20,7 +20,7 @@ package io.bootique.aws.secrets;
 
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import io.bootique.BQCoreModule;
-import io.bootique.ConfigModule;
+import io.bootique.BQModule;
 import io.bootique.ModuleCrate;
 import io.bootique.aws.AwsConfig;
 import io.bootique.aws.secrets.transformer.RDSToHikariDataSourceTransformer;
@@ -35,7 +35,9 @@ import javax.inject.Singleton;
  * @deprecated in favor of AWS v2 API
  */
 @Deprecated(since = "3.0", forRemoval = true)
-public class AwsSecretsModule extends ConfigModule {
+public class AwsSecretsModule implements BQModule {
+
+    private static final String CONFIG_PREFIX = "awssecrets";
 
     public static AwsSecretsManagerExtender extend(Binder binder) {
         return new AwsSecretsManagerExtender(binder);
@@ -45,7 +47,7 @@ public class AwsSecretsModule extends ConfigModule {
     public ModuleCrate crate() {
         return ModuleCrate.of(this)
                 .description("Deprecated, can be replaced with 'bootique-aws2-secrets'.")
-                .config("awssecrets", AwsSecretsFactory.class)
+                .config(CONFIG_PREFIX, AwsSecretsFactory.class)
                 .build();
     }
 
@@ -62,6 +64,6 @@ public class AwsSecretsModule extends ConfigModule {
     @Singleton
     @Provides
     AWSSecretsManager provideSecretsManager(ConfigurationFactory configFactory, AwsConfig config) {
-        return config(AwsSecretsFactory.class, configFactory).createSecretsManager(config);
+        return configFactory.config(AwsSecretsFactory.class, CONFIG_PREFIX).createSecretsManager(config);
     }
 }
