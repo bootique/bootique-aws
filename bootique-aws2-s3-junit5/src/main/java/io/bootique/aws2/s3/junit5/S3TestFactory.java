@@ -29,23 +29,33 @@ import io.bootique.di.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+
 @BQConfig
 @JsonTypeName("awss3test")
 public class S3TestFactory extends S3ClientFactoryFactory {
 
     static final Logger LOGGER = LoggerFactory.getLogger(S3TestFactory.class);
 
+    private final Injector injector;
+
+    @Inject
+    public S3TestFactory(AwsConfig config, Injector injector) {
+        super(config);
+        this.injector = injector;
+    }
+
     @Override
-    public S3ClientFactory create(AwsConfig config, Injector injector) {
+    public S3ClientFactory create() {
         Key<AwsTester> awsTesterKey = Key.get(AwsTester.class);
         if (!injector.hasProvider(awsTesterKey)) {
             LOGGER.warn("Using S3Tester without AwsTester. This will likely result in an invalid configuration");
-            return super.create(config, injector);
+            return super.create();
         }
 
         AwsTester tester = injector.getInstance(awsTesterKey);
         setEndpointOverride(tester.getEndpointOverride());
-        S3ClientFactory factory = super.create(config, injector);
+        S3ClientFactory factory = super.create();
 
         // run client startup callbacks
         Key<S3Tester> s3TesterKey = Key.get(S3Tester.class);

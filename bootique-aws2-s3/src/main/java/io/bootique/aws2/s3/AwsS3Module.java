@@ -24,7 +24,6 @@ import io.bootique.ModuleCrate;
 import io.bootique.aws2.AwsConfig;
 import io.bootique.config.ConfigurationFactory;
 import io.bootique.di.Binder;
-import io.bootique.di.Injector;
 import io.bootique.di.Provides;
 
 import javax.inject.Singleton;
@@ -47,7 +46,7 @@ public class AwsS3Module implements BQModule {
 
     @Provides
     @Singleton
-    S3ClientFactory provideS3ClientFactory(ConfigurationFactory configFactory, AwsConfig config, Injector injector) {
-        return configFactory.config(S3ClientFactoryFactory.class, CONFIG_PREFIX).create(config, injector);
+    S3ClientFactory provideS3ClientFactory(ConfigurationFactory configFactory, AwsConfig config) {
+        return configFactory.config(S3ClientFactoryFactory.class, CONFIG_PREFIX).create();
     }
 }

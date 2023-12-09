@@ -25,8 +25,8 @@ import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
 import io.bootique.aws2.AwsConfig;
 import io.bootique.config.PolymorphicConfiguration;
-import io.bootique.di.Injector;
 
+import javax.inject.Inject;
 import java.net.URI;
 
 @BQConfig
@@ -34,9 +34,15 @@ import java.net.URI;
 @JsonTypeName("default")
 public class S3ClientFactoryFactory implements PolymorphicConfiguration {
 
+    private final AwsConfig config;
     private URI endpointOverride;
 
-    public S3ClientFactory create(AwsConfig config, Injector injector) {
+    @Inject
+    public S3ClientFactoryFactory(AwsConfig config) {
+        this.config = config;
+    }
+
+    public S3ClientFactory create() {
         return new S3ClientFactory(config, endpointOverride);
     }
 
