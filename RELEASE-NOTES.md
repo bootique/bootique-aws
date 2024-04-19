@@ -1,3 +1,7 @@
+## 3.0-M4
+
+* #25 Upgrade AWS client libs
+
 ## 3.0-M3
 
 * #24 Deprecate AWS v1 API integration modules

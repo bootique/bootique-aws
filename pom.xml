@@ -39,8 +39,8 @@
 
     <properties>
         <bootique.version>${project.version}</bootique.version>
-        <aws1.sdk.version>1.12.267</aws1.sdk.version>
-        <aws2.sdk.version>2.20.150</aws2.sdk.version>
+        <aws1.sdk.version>1.12.704</aws1.sdk.version>
+        <aws2.sdk.version>2.25.34</aws2.sdk.version>
     </properties>
 
     <modules>
