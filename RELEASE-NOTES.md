@@ -1,3 +1,7 @@
+## 3.0-M5
+
+* #26 Upgrade AWS 2 lib to 2.29.6
+
 ## 3.0-M4
 
 * #25 Upgrade AWS client libs
