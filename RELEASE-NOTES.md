@@ -1,6 +1,7 @@
 ## 3.0-M5
 
 * #26 Upgrade AWS 2 lib to 2.29.6
+* #27 Upgrade AWS 1 lib to 1.12.777
 
 ## 3.0-M4
 
