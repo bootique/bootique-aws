@@ -38,7 +38,6 @@
     </description>
 
     <properties>
-        <bootique.version>${project.version}</bootique.version>
         <aws1.sdk.version>1.12.777</aws1.sdk.version>
         <aws2.sdk.version>2.29.6</aws2.sdk.version>
     </properties>
@@ -170,17 +169,17 @@
             <dependency>
                 <groupId>io.bootique</groupId>
                 <artifactId>bootique</artifactId>
-                <version>${bootique.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.bootique</groupId>
                 <artifactId>bootique-junit5</artifactId>
-                <version>${bootique.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.bootique.jdbc</groupId>
                 <artifactId>bootique-jdbc-hikaricp</artifactId>
-                <version>${bootique.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <!-- Importing testcontainers modules individually instead of using a BOM
             to have more control over the transitive dependencies -->
