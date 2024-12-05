@@ -28,8 +28,7 @@ to seamlessly merge data from AWS Secrets Manager into Bootique app configuratio
 
 ## Quick FAQ
 ### What AWS SDK Version does Bootique support?
-Bootique 2 supports AWS SDK `1.x`. Bootique 3 supports `2.x`, and `1.x` (in maintenance mode. No new features added to
-`1.x`). We strongly encourage the users to use `*-aws2` flavor.
+Bootique 2 supports AWS SDK `1.x`. Bootique 3 supports `2.x`. `1.x` is still available but is deprecated since Bootioque 3.0, doesn't have many new features, and will be removed in the future versions.
 
 ### I already have an app using Bootique with AWS SDK 1.x. How do I upgrade?
 The main challenge would be to upgrade the use of AWS API, which is significantly different. You can start by reading
