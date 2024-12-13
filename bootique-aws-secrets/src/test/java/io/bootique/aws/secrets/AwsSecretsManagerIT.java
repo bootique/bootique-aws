@@ -42,7 +42,7 @@ public class AwsSecretsManagerIT {
 
     // TODO: unfortunately can't reuse Localstack between the tests, as Testcontainers doesn't provide a GLOBAL scope
 
-    static DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:2.2.0");
+    static DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:4.0.3");
 
     @Container
     static final LocalStackContainer localstack = new LocalStackContainer(localstackImage)
