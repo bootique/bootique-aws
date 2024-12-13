@@ -2,6 +2,7 @@
 
 * #26 Upgrade AWS 2 lib to 2.29.6
 * #27 Upgrade AWS 1 lib to 1.12.777
+* #28 localstack 4.0.3
 
 ## 3.0-M4
 

@@ -43,7 +43,7 @@ import java.util.stream.Stream;
  */
 public class AwsTester implements BQBeforeScopeCallback, BQAfterScopeCallback {
 
-    static final String LOCALSTACK_CONTAINER_VERSION = "2.2.0";
+    static final String LOCALSTACK_CONTAINER_VERSION = "4.0.3";
 
     private final LocalStackContainer localstack;
 
