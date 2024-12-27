@@ -100,10 +100,15 @@ absent, the providers would be invoked.
 ## AWS EC2 and ECS
 
 You don't need an explicit `accessKey` / `secretKey` configuration when running on EC2 or ECS, as these environments 
-provide a built-in metadata service to look up credentials. To enable no-config deployment in EC2 or ECS, add the 
+provide a built-in metadata service to look up credentials. To enable no-config deployment in EC2, add the 
 following credentials provider:
 ```java
-AwsModule.extend(binder).addEC2ContainerCredentialsProvider();
+AwsModule.extend(binder).addContainerCredentialsProvider();
+```
+
+and for ECS use this:
+```java
+AwsModule.extend(binder).addContainerCredentialsProvider();
 ```
 
 ## AWS Lambdas
