@@ -28,7 +28,7 @@ import io.bootique.di.Binder;
 import io.bootique.di.Provides;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @since 3.0

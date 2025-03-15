@@ -26,7 +26,7 @@ import io.bootique.annotation.BQConfigProperty;
 import io.bootique.aws2.AwsConfig;
 import io.bootique.config.PolymorphicConfiguration;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.net.URI;
 
 @BQConfig

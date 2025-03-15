@@ -27,7 +27,7 @@ import io.bootique.config.ConfigurationFactory;
 import io.bootique.di.Binder;
 import io.bootique.di.Provides;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 /**
  * @deprecated in favor of AWS v2 API

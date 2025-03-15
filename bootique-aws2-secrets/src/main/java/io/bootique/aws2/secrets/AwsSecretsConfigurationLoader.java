@@ -30,7 +30,7 @@ import io.bootique.di.Injector;
 import io.bootique.jackson.JacksonService;
 import io.bootique.log.BootLogger;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.Map;
 
 /**

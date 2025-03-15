@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.bootique.aws.secrets.AwsJsonTransformer;
 import io.bootique.log.BootLogger;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * @since 2.0
