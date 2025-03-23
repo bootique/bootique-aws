@@ -39,7 +39,7 @@
 
     <properties>
         <aws1.sdk.version>1.12.777</aws1.sdk.version>
-        <aws2.sdk.version>2.29.6</aws2.sdk.version>
+        <aws2.sdk.version>2.31.6</aws2.sdk.version>
     </properties>
 
     <modules>

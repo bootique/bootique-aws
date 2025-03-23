@@ -1,3 +1,7 @@
+## 3.0-RC1
+
+* #29 Upgrade AWS 2 lib to 2.31.6
+
 ## 3.0-M6
 
 * #26 Upgrade AWS 2 lib to 2.29.6
