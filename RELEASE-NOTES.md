@@ -1,3 +1,7 @@
+## 4.0-M1
+
+* #30 Remove deprecated SDK v1 modules
+
 ## 3.0-RC1
 
 * #29 Upgrade AWS 2 lib to 2.31.6

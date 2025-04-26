@@ -38,15 +38,10 @@
     </description>
 
     <properties>
-        <aws1.sdk.version>1.12.777</aws1.sdk.version>
         <aws2.sdk.version>2.31.6</aws2.sdk.version>
     </properties>
 
     <modules>
-        <module>bootique-aws</module>
-        <module>bootique-aws-s3</module>
-        <module>bootique-aws-secrets</module>
-
         <module>bootique-aws2</module>
         <module>bootique-aws2-junit5</module>
         <module>bootique-aws2-s3</module>
@@ -114,53 +109,6 @@
                 <exclusions>
                     <exclusion>
                         <groupId>org.slf4j</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <!-- 1.x dependencies -->
-            <dependency>
-                <groupId>com.amazonaws</groupId>
-                <artifactId>aws-java-sdk-core</artifactId>
-                <version>${aws1.sdk.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.fasterxml.jackson.dataformat</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.fasterxml.jackson.core</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>com.amazonaws</groupId>
-                <artifactId>aws-java-sdk-s3</artifactId>
-                <version>${aws1.sdk.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.fasterxml.jackson.core</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>com.amazonaws</groupId>
-                <artifactId>aws-java-sdk-secretsmanager</artifactId>
-                <version>${aws1.sdk.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.fasterxml.jackson.core</groupId>
                         <artifactId>*</artifactId>
                     </exclusion>
                 </exclusions>
