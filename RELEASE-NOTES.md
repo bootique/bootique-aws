@@ -1,6 +1,7 @@
 ## 4.0-M1
 
 * #30 Remove deprecated SDK v1 modules
+* #31 Update transitive dependency on commons-compress to 1.26.1
 
 ## 3.0-RC1
 
