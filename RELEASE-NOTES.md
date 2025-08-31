@@ -1,3 +1,7 @@
+## 4.0-M2
+
+* #32 Upgrade to AWS SDK 2.32.31
+
 ## 4.0-M1
 
 * #30 Remove deprecated SDK v1 modules
