@@ -41,6 +41,7 @@
         <aws2.sdk.version>2.31.6</aws2.sdk.version>
         <commons.compress.version>1.26.1</commons.compress.version>
         <commons.lang.version>3.18.0</commons.lang.version>
+        <commons.io.version>2.19.0</commons.io.version>
     </properties>
 
     <modules>
@@ -80,8 +81,6 @@
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.databind.version}</version>
             </dependency>
-
-            <!-- 2.x dependencies -->
             <dependency>
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>aws-core</artifactId>
@@ -124,12 +123,21 @@
                         <groupId>org.apache.commons</groupId>
                         <artifactId>commons-lang3</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>commons-io</groupId>
+                        <artifactId>commons-io</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons.lang.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
             </dependency>
 
             <dependency>
