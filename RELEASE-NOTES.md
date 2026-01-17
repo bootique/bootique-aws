@@ -1,11 +1,16 @@
 ## 4.0-M2
 
 * #32 Upgrade to AWS SDK 2.32.31
+* #33 Upgrade to AWS2 SDK 2.41.10
 
 ## 4.0-M1
 
 * #30 Remove deprecated SDK v1 modules
 * #31 Update transitive dependency on commons-compress to 1.26.1
+
+## 3.0-RC2
+
+* #33 Upgrade to AWS2 SDK 2.41.10
 
 ## 3.0-RC1
 
