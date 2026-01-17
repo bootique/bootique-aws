@@ -1,3 +1,7 @@
+## 3.0-RC2
+
+* #33 Upgrade to AWS2 SDK 2.41.10
+
 ## 3.0-RC1
 
 * #29 Upgrade AWS 2 lib to 2.31.6
