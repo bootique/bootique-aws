@@ -38,7 +38,7 @@
     </description>
 
     <properties>
-        <aws.sdk.version>2.32.31</aws.sdk.version>
+        <aws.sdk.version>2.41.10</aws.sdk.version>
         <commons.compress.version>1.26.1</commons.compress.version>
         <commons.lang.version>3.18.0</commons.lang.version>
         <commons.io.version>2.19.0</commons.io.version>
