@@ -54,7 +54,7 @@ public class S3TestFactory extends S3ClientFactoryFactory {
         }
 
         AwsTester tester = injector.getInstance(awsTesterKey);
-        setEndpointOverride(tester.getEndpointOverride());
+        setEndpointOverride(tester.getEndpoint());
         S3ClientFactory factory = super.create();
 
         // run client startup callbacks

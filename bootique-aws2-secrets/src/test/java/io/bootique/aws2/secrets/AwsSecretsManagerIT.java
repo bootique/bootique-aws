@@ -24,7 +24,7 @@ import io.bootique.Bootique;
 import io.bootique.junit5.BQApp;
 import io.bootique.junit5.BQTest;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.localstack.LocalStackContainer;
+import org.testcontainers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
@@ -42,8 +42,7 @@ public class AwsSecretsManagerIT {
     static DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:4.0.3");
 
     @Container
-    static final LocalStackContainer localstack = new LocalStackContainer(localstackImage)
-            .withServices(LocalStackContainer.Service.SECRETSMANAGER);
+    static final LocalStackContainer localstack = new LocalStackContainer(localstackImage).withServices("secretsmanager");
 
     // app can't be static, as it won't be able to access values from localstack
     @BQApp(skipRun = true)
@@ -52,7 +51,7 @@ public class AwsSecretsManagerIT {
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.credentials.accessKey", localstack.getAccessKey()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.credentials.secretKey", localstack.getSecretKey()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.defaultRegion", localstack.getRegion()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.endpointOverride", localstack.getEndpointOverride(LocalStackContainer.Service.SECRETSMANAGER).toString()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.endpointOverride", localstack.getEndpoint().toString()))
             .createRuntime();
 
     @Test

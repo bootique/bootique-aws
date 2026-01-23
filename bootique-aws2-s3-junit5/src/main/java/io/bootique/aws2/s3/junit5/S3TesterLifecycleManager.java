@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.s3.S3Client;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -36,7 +37,7 @@ class S3TesterLifecycleManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3TesterLifecycleManager.class);
 
     private final AtomicBoolean attachedToRuntime;
-    private List<String> bucketNames;
+    private final List<String> bucketNames;
     private final List<Consumer<S3ClientFactory>> afterBucketsCreated;
     private final List<Consumer<S3ClientFactory>> beforeEachTest;
 
@@ -85,9 +86,7 @@ class S3TesterLifecycleManager {
     }
 
     void createBuckets(String... bucketNames) {
-        for (String n : bucketNames) {
-            this.bucketNames.add(n);
-        }
+        Collections.addAll(this.bucketNames, bucketNames);
     }
 
     void runAfterBucketsCreated(Consumer<S3ClientFactory> callback) {

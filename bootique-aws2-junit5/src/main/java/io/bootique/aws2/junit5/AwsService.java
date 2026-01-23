@@ -53,6 +53,10 @@ public enum AwsService {
     IAM,
     KMS;
 
+    /**
+     * @deprecated Testcontainers is using string service names since v.2.0.*
+     */
+    @Deprecated(since = "4.0", forRemoval = true)
     public LocalStackContainer.Service toLocalstackService() {
         return LocalStackContainer.Service.valueOf(name());
     }

@@ -24,7 +24,7 @@ import io.bootique.Bootique;
 import io.bootique.junit5.BQApp;
 import io.bootique.junit5.BQTest;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.localstack.LocalStackContainer;
+import org.testcontainers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
@@ -49,8 +49,7 @@ public class AwsS3IT {
     static DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:4.0.3");
 
     @Container
-    static final LocalStackContainer localstack = new LocalStackContainer(localstackImage)
-            .withServices(LocalStackContainer.Service.S3);
+    static final LocalStackContainer localstack = new LocalStackContainer(localstackImage).withServices("s3");
 
     @BQApp(skipRun = true)
     final BQRuntime app = Bootique.app()
@@ -58,7 +57,7 @@ public class AwsS3IT {
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.credentials.accessKey", localstack.getAccessKey()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.credentials.secretKey", localstack.getSecretKey()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.defaultRegion", localstack.getRegion()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awss3.endpointOverride", localstack.getEndpointOverride(LocalStackContainer.Service.S3).toString()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awss3.endpointOverride", localstack.getEndpoint().toString()))
             .createRuntime();
 
     @Test
@@ -74,7 +73,7 @@ public class AwsS3IT {
         // list bucket
         ListObjectsV2Response list = s3.listObjectsV2(b -> b.bucket("test-bucket"));
         assertEquals(1, list.contents().size());
-        S3Object s3object = list.contents().get(0);
+        S3Object s3object = list.contents().getFirst();
         assertEquals("f1", s3object.key());
 
         // get object

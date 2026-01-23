@@ -25,7 +25,7 @@ import io.bootique.junit5.BQTestScope;
 import io.bootique.junit5.scope.BQAfterScopeCallback;
 import io.bootique.junit5.scope.BQBeforeScopeCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.testcontainers.containers.localstack.LocalStackContainer;
+import org.testcontainers.localstack.LocalStackContainer;
 import org.testcontainers.utility.DockerImageName;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
@@ -57,10 +57,10 @@ public class AwsTester implements BQBeforeScopeCallback, BQAfterScopeCallback {
 
     public static AwsTester aws(DockerImageName localstackImage, AwsService... services) {
 
-        LocalStackContainer.Service[] tcServices = Stream
+        String[] tcServices = Stream
                 .of(services)
-                .map(AwsService::toLocalstackService)
-                .toArray(i -> new LocalStackContainer.Service[i]);
+                .map(s -> s.name().toLowerCase())
+                .toArray(String[]::new);
 
         LocalStackContainer container = new LocalStackContainer(localstackImage).withServices(tcServices);
 
@@ -98,10 +98,19 @@ public class AwsTester implements BQBeforeScopeCallback, BQAfterScopeCallback {
         binder.bind(AwsTester.class).toInstance(this);
     }
 
+    /**
+     * @since 4.0
+     */
+    public URI getEndpoint() {
+        return localstack.getEndpoint();
+    }
+
+    /**
+     * @deprecated in favor of {@link #getEndpoint()}
+     */
+    @Deprecated(since = "4.0", forRemoval = true)
     public URI getEndpointOverride() {
-        // The latest Localstack uses a single port for all services, so we can use any "service" to resolve
-        // the end override
-        return localstack.getEndpointOverride(LocalStackContainer.Service.EC2);
+        return getEndpoint();
     }
 
     public AwsCredentialsProvider getCredentialsProvider() {

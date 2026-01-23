@@ -26,7 +26,7 @@ import io.bootique.junit5.BQApp;
 import io.bootique.junit5.BQTest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.localstack.LocalStackContainer;
+import org.testcontainers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
@@ -50,8 +50,7 @@ public class AwsSecretsConfigurationLoaderIT {
     private static final DockerImageName localstackImage = DockerImageName.parse("localstack/localstack:4.0.3");
 
     @Container
-    static final LocalStackContainer localstack = new LocalStackContainer(localstackImage)
-            .withServices(LocalStackContainer.Service.SECRETSMANAGER);
+    static final LocalStackContainer localstack = new LocalStackContainer(localstackImage).withServices("secretsmanager");
 
     @BeforeAll
     static void loadSecrets() {
@@ -65,7 +64,7 @@ public class AwsSecretsConfigurationLoaderIT {
         SecretsManagerClient sm = SecretsManagerClient.builder()
                 .credentialsProvider(credentialsProvider)
                 .region(Region.of(localstack.getRegion()))
-                .endpointOverride(localstack.getEndpointOverride(LocalStackContainer.Service.SECRETSMANAGER))
+                .endpointOverride(localstack.getEndpoint())
                 .build();
 
         SECRET1 = sm.createSecret(b -> b.secretString(secret1).name("secret1"));
@@ -81,7 +80,7 @@ public class AwsSecretsConfigurationLoaderIT {
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.credentials.accessKey", localstack.getAccessKey()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.credentials.secretKey", localstack.getSecretKey()))
             .module(b -> BQCoreModule.extend(b).setProperty("bq.aws.defaultRegion", localstack.getRegion()))
-            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.endpointOverride", localstack.getEndpointOverride(LocalStackContainer.Service.SECRETSMANAGER).toString()))
+            .module(b -> BQCoreModule.extend(b).setProperty("bq.awssecrets.endpointOverride", localstack.getEndpoint().toString()))
 
             // load some base config.. Secrets will be merged on top of it
             .module(b -> BQCoreModule.extend(b).setProperty("bq.a.user", "a_uname"))

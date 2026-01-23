@@ -47,7 +47,7 @@ public class AwsTesterIT {
     public void s3() throws IOException {
         S3Client s3 = S3Client
                 .builder()
-                .endpointOverride(tester.getEndpointOverride())
+                .endpointOverride(tester.getEndpoint())
                 .credentialsProvider(tester.getCredentialsProvider())
                 .region(tester.getRegion())
                 .build();
