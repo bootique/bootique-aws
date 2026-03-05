@@ -27,10 +27,10 @@
         <version>4.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>bootique-aws2-junit5</artifactId>
+    <artifactId>bootique-aws2-junit</artifactId>
     <packaging>jar</packaging>
 
-    <name>bootique-aws2-junit5: Bootique integration of JUnit5 and Localstack</name>
+    <name>bootique-aws2-junit: Bootique integration of JUnit and Localstack</name>
 
     <dependencies>
         <!-- Compile dependencies -->

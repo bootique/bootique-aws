@@ -43,9 +43,9 @@
 
     <modules>
         <module>bootique-aws2</module>
-        <module>bootique-aws2-junit5</module>
+        <module>bootique-aws2-junit</module>
         <module>bootique-aws2-s3</module>
-        <module>bootique-aws2-s3-junit5</module>
+        <module>bootique-aws2-s3-junit</module>
         <module>bootique-aws2-secrets</module>
     </modules>
 

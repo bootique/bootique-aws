@@ -27,10 +27,10 @@
         <version>4.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>bootique-aws2-s3-junit5</artifactId>
+    <artifactId>bootique-aws2-s3-junit</artifactId>
     <packaging>jar</packaging>
 
-    <name>bootique-aws2-s3-junit5: Bootique integration of JUnit5 and Localstack S3 service</name>
+    <name>bootique-aws2-s3-junit: Bootique integration of JUnit and Localstack S3 service</name>
 
     <dependencies>
         <!-- Compile dependencies -->
@@ -41,7 +41,7 @@
         </dependency>
         <dependency>
             <groupId>io.bootique.aws</groupId>
-            <artifactId>bootique-aws2-junit5</artifactId>
+            <artifactId>bootique-aws2-junit</artifactId>
             <version>${project.version}</version>
         </dependency>
 
