@@ -20,7 +20,7 @@
 package io.bootique.aws2.s3;
 
 
-import io.bootique.junit5.BQModuleTester;
+import io.bootique.junit.BQModuleTester;
 import org.junit.jupiter.api.Test;
 
 public class AwsS3ModuleTest {

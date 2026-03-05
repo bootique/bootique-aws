@@ -21,9 +21,10 @@ package io.bootique.aws2.junit5;
 import io.bootique.BQCoreModule;
 import io.bootique.BQModule;
 import io.bootique.di.Binder;
-import io.bootique.junit5.BQTestScope;
-import io.bootique.junit5.scope.BQAfterScopeCallback;
-import io.bootique.junit5.scope.BQBeforeScopeCallback;
+import io.bootique.junit.BQTestTool;
+import io.bootique.junit.BQTestScope;
+import io.bootique.junit.scope.BQAfterScopeCallback;
+import io.bootique.junit.scope.BQBeforeScopeCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.localstack.LocalStackContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -36,7 +37,7 @@ import java.net.URI;
 import java.util.stream.Stream;
 
 /**
- * A {@link io.bootique.junit5.BQTestTool} that allows to emulate multiple AWS services via Localstack and
+ * A {@link BQTestTool} that allows to emulate multiple AWS services via Localstack and
  * Testcontainers.
  *
  * @since 3.0

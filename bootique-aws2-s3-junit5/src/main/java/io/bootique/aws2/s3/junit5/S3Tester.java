@@ -22,15 +22,16 @@ import io.bootique.BQCoreModule;
 import io.bootique.aws2.s3.S3ClientFactory;
 import io.bootique.BQModule;
 import io.bootique.di.Binder;
-import io.bootique.junit5.BQTestScope;
-import io.bootique.junit5.scope.BQAfterMethodCallback;
-import io.bootique.junit5.scope.BQBeforeMethodCallback;
+import io.bootique.junit.BQTestTool;
+import io.bootique.junit.BQTestScope;
+import io.bootique.junit.scope.BQAfterMethodCallback;
+import io.bootique.junit.scope.BQBeforeMethodCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.util.function.Consumer;
 
 /**
- * A {@link io.bootique.junit5.BQTestTool} that allows to manage test S3 buckets within a unit test. Only works with
+ * A {@link BQTestTool} that allows to manage test S3 buckets within a unit test. Only works with
  * a single test {@link io.bootique.BQRuntime}.
  *
  * @since 3.0
