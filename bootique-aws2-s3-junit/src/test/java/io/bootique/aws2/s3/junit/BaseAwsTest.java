@@ -16,10 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package io.bootique.aws2.s3.junit5;
+package io.bootique.aws2.s3.junit;
 
-import io.bootique.aws2.junit5.AwsService;
-import io.bootique.aws2.junit5.AwsTester;
+import io.bootique.aws2.junit.AwsService;
+import io.bootique.aws2.junit.AwsTester;
 import io.bootique.junit.BQTest;
 import io.bootique.junit.BQTestScope;
 import io.bootique.junit.BQTestTool;

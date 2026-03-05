@@ -16,12 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package io.bootique.aws2.s3.junit5;
+package io.bootique.aws2.s3.junit;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.bootique.annotation.BQConfig;
 import io.bootique.aws2.AwsConfig;
-import io.bootique.aws2.junit5.AwsTester;
+import io.bootique.aws2.junit.AwsTester;
 import io.bootique.aws2.s3.S3ClientFactory;
 import io.bootique.aws2.s3.S3ClientFactoryFactory;
 import io.bootique.di.Injector;

@@ -16,12 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package io.bootique.aws2.s3.junit5;
+package io.bootique.aws2.s3.junit;
 
 import io.bootique.BQRuntime;
 import io.bootique.Bootique;
-import io.bootique.aws2.junit5.AwsService;
-import io.bootique.aws2.junit5.AwsTester;
+import io.bootique.aws2.junit.AwsService;
+import io.bootique.aws2.junit.AwsTester;
 import io.bootique.aws2.s3.S3ClientFactory;
 import io.bootique.junit.BQApp;
 import io.bootique.junit.BQTest;

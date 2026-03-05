@@ -16,48 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package io.bootique.aws2.junit5;
+package io.bootique.aws2.junit;
 
+import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 
-/**
- * Lists AWS services that can be emulated in your tests.
- *
- * @since 3.0
- */
-public enum AwsService {
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    // Must match LocalStackContainer.Service enum. Will need to be updated  as we upgrade to newer TC with more
-    // services. Consistency is guaranteed via AwsServiceTest
+public class AwsServiceTest {
 
-    API_GATEWAY,
-    EC2,
-    KINESIS,
-    DYNAMODB,
-    DYNAMODB_STREAMS,
-    S3,
-    FIREHOSE,
-    LAMBDA,
-    SNS,
-    SQS,
-    REDSHIFT,
-    SES,
-    ROUTE53,
-    CLOUDFORMATION,
-    CLOUDWATCH,
-    SSM,
-    SECRETSMANAGER,
-    STEPFUNCTIONS,
-    CLOUDWATCHLOGS,
-    STS,
-    IAM,
-    KMS;
-
-    /**
-     * @deprecated Testcontainers is using string service names since v.2.0.*
-     */
-    @Deprecated(since = "4.0", forRemoval = true)
-    public LocalStackContainer.Service toLocalstackService() {
-        return LocalStackContainer.Service.valueOf(name());
+    @Test
+    public void matchesTestcontainersServiceList() {
+        assertEquals(AwsService.values().length, LocalStackContainer.Service.values().length);
+        for(AwsService s : AwsService.values()) {
+            assertDoesNotThrow(() -> s.toLocalstackService());
+        }
     }
 }

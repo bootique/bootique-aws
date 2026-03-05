@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package io.bootique.aws2.junit5;
+package io.bootique.aws2.junit;
 
 import io.bootique.BQCoreModule;
 import io.bootique.BQModule;
