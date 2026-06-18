@@ -38,7 +38,7 @@
     </description>
 
     <properties>
-        <aws.sdk.version>2.41.10</aws.sdk.version>
+        <aws.sdk.version>2.46.13</aws.sdk.version>
     </properties>
 
     <modules>

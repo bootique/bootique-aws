@@ -1,3 +1,7 @@
+## 4.0-M4
+
+* #35 Upgrade to AWS SDK 2.46.13
+
 ## 4.0-M3
 
 * #34 Upgrade Testcontainers to 2.0.3
