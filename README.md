@@ -18,7 +18,7 @@
   -->
 
 [![build test deploy](https://github.com/bootique/bootique-aws/actions/workflows/maven.yml/badge.svg)](https://github.com/bootique/bootique-aws/actions/workflows/maven.yml)
-[![Maven Central](https://img.shields.io/maven-central/v/io.bootique.aws/bootique-aws.svg?colorB=brightgreen)](https://search.maven.org/artifact/io.bootique.aws/bootique-aws)
+[![Maven Central](https://img.shields.io/maven-central/v/io.bootique.aws/bootique-aws-parent.svg?colorB=brightgreen)](https://search.maven.org/artifact/io.bootique.aws/bootique-aws-parent)
 
 # Bootique AWS
 
