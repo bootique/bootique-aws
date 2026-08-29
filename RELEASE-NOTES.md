@@ -1,3 +1,7 @@
+## 4.0-M6
+
+* #36 Upgrade the client SDK to 2.54.7
+
 ## 4.0-M4
 
 * #35 Upgrade to AWS SDK 2.46.13
